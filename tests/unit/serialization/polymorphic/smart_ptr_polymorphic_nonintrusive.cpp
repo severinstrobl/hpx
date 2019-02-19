@@ -11,6 +11,7 @@
 #include <hpx/runtime/serialization/input_archive.hpp>
 #include <hpx/runtime/serialization/output_archive.hpp>
 
+#include <hpx/util/intrusive_ptr.hpp>
 #include <hpx/util/lightweight_test.hpp>
 
 #include <boost/intrusive_ptr.hpp>
@@ -215,7 +216,7 @@ void serialize(Archive& ar, F& f, unsigned)
 }
 HPX_SERIALIZATION_REGISTER_CLASS(F);
 
-void test_intrusive()
+void test_boost_intrusive()
 {
     boost::intrusive_ptr<D> ip(new F);
     boost::intrusive_ptr<D> op1;
@@ -248,9 +249,43 @@ void test_intrusive()
     HPX_TEST_EQ(op2->count, 1);
 }
 
+void test_intrusive()
+{
+    hpx::util::intrusive_ptr<D> ip(new F);
+    hpx::util::intrusive_ptr<D> op1;
+    hpx::util::intrusive_ptr<D> op2;
+    {
+        std::vector<char> buffer;
+        hpx::serialization::output_archive oarchive(buffer);
+        oarchive << ip << ip;
+
+        hpx::serialization::input_archive iarchive(buffer);
+        iarchive >> op1;
+        iarchive >> op2;
+    }
+    HPX_TEST_NEQ(op1.get(), ip.get());
+    HPX_TEST_NEQ(op2.get(), ip.get());
+    HPX_TEST_EQ(op1.get(), op2.get());
+    HPX_TEST_EQ(op1->foo(), std::string("F::foo"));
+    HPX_TEST_EQ(op2->foo(), std::string("F::foo"));
+    HPX_TEST_EQ(static_cast<F*>(op1.get())->a, 1);
+    HPX_TEST_EQ(static_cast<F*>(op1.get())->b, 2);
+    HPX_TEST_EQ(static_cast<F*>(op1.get())->get_c(), 3);
+    HPX_TEST_EQ(static_cast<F*>(op2.get())->a, 1);
+    HPX_TEST_EQ(static_cast<F*>(op2.get())->b, 2);
+    HPX_TEST_EQ(static_cast<F*>(op2.get())->get_c(), 3);
+
+    HPX_TEST_EQ(ip->count, 1);
+    HPX_TEST_EQ(op1->count, 2);
+    HPX_TEST_EQ(op2->count, 2);
+    op1.reset();
+    HPX_TEST_EQ(op2->count, 1);
+}
+
 int main()
 {
     test_shared();
+    test_boost_intrusive();
     test_intrusive();
 
     return hpx::util::report_errors();

@@ -14,6 +14,7 @@
 #include <hpx/runtime/serialization/input_archive.hpp>
 #include <hpx/runtime/serialization/output_archive.hpp>
 
+#include <hpx/util/intrusive_ptr.hpp>
 #include <hpx/util/lightweight_test.hpp>
 
 #include <boost/intrusive_ptr.hpp>
@@ -40,7 +41,7 @@ void test_boost_shared()
     HPX_TEST_NEQ(op2.get(), ip.get());
     HPX_TEST_EQ(op1.get(), op2.get());
     HPX_TEST_EQ(*op1, *ip);
-    op1.reset();
+    op1 = nullptr;
     HPX_TEST_EQ(*op2, *ip);
 }
 
@@ -62,7 +63,7 @@ void test_shared()
     HPX_TEST_NEQ(op2.get(), ip.get());
     HPX_TEST_EQ(op1.get(), op2.get());
     HPX_TEST_EQ(*op1, *ip);
-    op1.reset();
+    op1 = nullptr;
     HPX_TEST_EQ(*op2, *ip);
 }
 
@@ -135,7 +136,33 @@ void test_intrusive()
     HPX_TEST_EQ(op1->i, ip->i);
     HPX_TEST_EQ(op1->count, 2);
     HPX_TEST_EQ(op2->count, 2);
-    op1.reset();
+    op1 = nullptr;
+    HPX_TEST_EQ(op2->count, 1);
+    HPX_TEST_EQ(op2->i, ip->i);
+}
+
+void test_intrusive()
+{
+    hpx::util::intrusive_ptr<A> ip(new A());
+    hpx::util::intrusive_ptr<A> op1;
+    hpx::util::intrusive_ptr<A> op2;
+    {
+        std::vector<char> buffer;
+        hpx::serialization::output_archive oarchive(buffer);
+        oarchive << ip << ip;
+
+        hpx::serialization::input_archive iarchive(buffer);
+        iarchive >> op1;
+        iarchive >> op2;
+    }
+    HPX_TEST_EQ(ip->count, 1);
+    HPX_TEST_NEQ(op1.get(), ip.get());
+    HPX_TEST_NEQ(op2.get(), ip.get());
+    HPX_TEST_EQ(op1.get(), op2.get());
+    HPX_TEST_EQ(op1->i, ip->i);
+    HPX_TEST_EQ(op1->count, 2);
+    HPX_TEST_EQ(op2->count, 2);
+    op1 = nullptr;
     HPX_TEST_EQ(op2->count, 1);
     HPX_TEST_EQ(op2->i, ip->i);
 }
@@ -145,6 +172,7 @@ int main()
     test_boost_shared();
     test_shared();
     test_unique();
+    test_boost_intrusive();
     test_intrusive();
 
     return hpx::util::report_errors();
