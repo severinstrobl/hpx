@@ -1647,7 +1647,7 @@ endif()
 # search path configuration
 ################################################################################
 if(HPX_WITH_FULL_RPATH)
-  hpx_include(SetFullRPATH)
+  include(HPX_SetFullRPATH)
 endif()
 
 ################################################################################
