@@ -81,28 +81,33 @@ if(NOT Boost_FOUND)
 endif()
 
 add_library(hpx::boost INTERFACE IMPORTED)
-target_include_directories(hpx::boost INTERFACE ${Boost_INCLUDE_DIRS})
-target_link_libraries(hpx::boost INTERFACE ${Boost_LIBRARIES})
-
-find_package(Threads REQUIRED)
-target_link_libraries(hpx::boost INTERFACE Threads::Threads)
-
-if(HPX_WITH_COMPRESSION_BZIP2 OR HPX_WITH_COMPRESSION_ZLIB)
-  find_package(Boost 1.61 QUIET MODULE COMPONENTS iostreams)
-  if(Boost_IOSTREAMS_FOUND)
-    hpx_info("  iostreams")
-  else()
-    hpx_error("Could not find Boost.Iostreams but HPX_WITH_COMPRESSION_BZIP2=On or HPX_WITH_COMPRESSION_LIB=On. Either set it to off or provide a boost installation including the iostreams library")
-  endif()
-  target_link_libraries(hpx::boost INTERFACE iostreams)
-endif()
-
 
 # If we compile natively for the MIC, we need some workarounds for certain
 # Boost headers
 # FIXME: push changes upstream
 if(HPX_PLATFORM_UC STREQUAL "XEONPHI")
-  target_include_directories(hpx::boost BEFORE INTERFACE ${PROJECT_SOURCE_DIR}/external/asio)
+  # Before flag remove when passing at set_property for cmake < 3.11 instead of target_include_directories
+  # so should be added first
+  set_property(TARGET hpx::boost PROPERTY INTERFACE_INCLUDE_DIRECTORIES ${PROJECT_SOURCE_DIR}/external/asio)
+endif()
+
+set_property(TARGET hpx::boost APPEND PROPERTY INTERFACE_INCLUDE_DIRECTORIES ${Boost_INCLUDE_DIRS})
+set_property(TARGET hpx::boost APPEND PROPERTY INTERFACE_LINK_LIBRARIES ${Boost_LIBRARIES})
+
+find_package(Threads REQUIRED)
+set_property(TARGET hpx::boost APPEND PROPERTY INTERFACE_LINK_LIBRARIES Threads::Threads)
+
+if(HPX_WITH_COMPRESSION_BZIP2 OR HPX_WITH_COMPRESSION_ZLIB)
+  find_package(Boost ${__boost_minimum_version} QUIET MODULE COMPONENTS iostreams)
+  if(Boost_IOSTREAMS_FOUND)
+    hpx_info("  iostreams")
+  else()
+    hpx_error("Could not find Boost.Iostreams but HPX_WITH_COMPRESSION_BZIP2=On or \
+    HPX_WITH_COMPRESSION_LIB=On. Either set it to off or provide a boost installation including \
+    the iostreams library")
+  endif()
+  # Can't directly link to "iostreams" target in set_property, can change is when using target_link_libraries
+  set_property(TARGET hpx::boost APPEND PROPERTY INTERFACE_LINK_LIBRARIES ${Boost_IOSTREAMS_LIBRARIES})
 endif()
 
 include(HPX_AddDefinitions)
@@ -114,4 +119,4 @@ if(NOT MSVC)
   hpx_add_config_define(HPX_COROUTINE_NO_SEPARATE_CALL_SITES)
 endif()
 hpx_add_config_cond_define(BOOST_BIGINT_HAS_NATIVE_INT64)
-target_compile_definitions(hpx::boost INTERFACE BOOST_ALL_NO_LIB) # disable auto-linking
+set_property(TARGET hpx::boost APPEND PROPERTY INTERFACE_COMPILE_DEFINITIONS BOOST_ALL_NO_LIB) # disable auto-linking
