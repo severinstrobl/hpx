@@ -1750,6 +1750,11 @@ include(HPX_CompilerFlagsTarget)
 add_subdirectory(libs)
 
 ################################################################################
+# Add core dependency
+################################################################################
+add_hpx_pseudo_target(core)
+
+################################################################################
 # Configure compression and other plugins
 ################################################################################
 set(HPX_STATIC_PARCELPORT_PLUGINS "" CACHE INTERNAL "" FORCE)
@@ -1782,7 +1787,9 @@ if(HPX_WITH_TOOLS)
   add_subdirectory(tools)
 endif()
 
-add_hpx_pseudo_target(core)
+################################################################################
+# Add core configuration
+################################################################################
 add_subdirectory(src)
 
 ################################################################################
@@ -1811,11 +1818,6 @@ endif()
 if(HPX_WITH_DOCUMENTATION)
   add_subdirectory(docs)
 endif()
-
-###############################################################################
-# Activate plugins
-###############################################################################
-add_plugin_modules()
 
 # Configure hpxrun.py
 configure_file("${PROJECT_SOURCE_DIR}/cmake/templates/hpxrun.py.in"
