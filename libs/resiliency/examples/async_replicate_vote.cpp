@@ -8,6 +8,7 @@
 #include <hpx/hpx_init.hpp>
 #include <hpx/include/future.hpp>
 #include <hpx/resiliency/resiliency.hpp>
+#include <hpx/timing.hpp>
 
 #include <cstddef>
 #include <iostream>

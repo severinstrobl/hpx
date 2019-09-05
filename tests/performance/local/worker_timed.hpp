@@ -9,7 +9,7 @@
 #ifndef HPX_TESTS_PERFORMANCE_WORKER_HPP
 #define HPX_TESTS_PERFORMANCE_WORKER_HPP
 
-#include <hpx/timing/high_resolution_clock.hpp>
+#include <hpx/timing.hpp>
 
 #include <cstdint>
 

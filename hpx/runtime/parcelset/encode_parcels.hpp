@@ -11,6 +11,8 @@
 #define HPX_PARCELSET_ENCODE_PARCEL_HPP
 
 #include <hpx/config.hpp>
+
+#if defined(HPX_HAVE_NETWORKING)
 #include <hpx/assertion.hpp>
 #include <hpx/errors.hpp>
 #include <hpx/runtime/actions/basic_action.hpp>
@@ -265,4 +267,5 @@ namespace hpx
     }
 }
 
+#endif
 #endif

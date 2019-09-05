@@ -5,9 +5,14 @@
 
 set(subdirs
     local
-    network
     compute
    )
+
+if(HPX_WITH_NETWORKING)
+  set(subdirs ${subdirs}
+    network
+   )
+endif()
 
 foreach(subdir ${subdirs})
   add_hpx_pseudo_target(tests.performance.${subdir})

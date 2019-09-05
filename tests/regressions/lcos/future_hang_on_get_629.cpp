@@ -10,8 +10,7 @@
 #include <hpx/include/plain_actions.hpp>
 #include <hpx/include/async.hpp>
 #include <hpx/include/runtime.hpp>
-#include <hpx/timing/high_resolution_timer.hpp>
-
+#include <hpx/timing.hpp>
 
 #include <cstdint>
 #include <iostream>

@@ -8,9 +8,12 @@ set(tests
     no_output_1173
    )
 
+
 set(lost_output_2236_FLAGS COMPONENT_DEPENDENCIES iostreams)
 
-set(no_output_1173_PARAMETERS LOCALITIES 2)
+if(HPX_WITH_NETWORKING)
+  set(no_output_1173_PARAMETERS LOCALITIES 2)
+endif()
 set(no_output_1173_FLAGS COMPONENT_DEPENDENCIES iostreams)
 
 foreach(test ${tests})

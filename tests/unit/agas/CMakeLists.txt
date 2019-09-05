@@ -19,107 +19,94 @@ set(tests
    )
 
 if(HPX_WITH_NETWORKING)
-    set(tests ${tests}
-        credit_exhaustion
-        local_embedded_ref_to_remote_object
-        remote_embedded_ref_to_local_object
-        remote_embedded_ref_to_remote_object
-        refcnted_symbol_to_remote_object
-        scoped_ref_to_remote_object
-        uncounted_symbol_to_remote_object
-       )
-
-  set(credit_exhaustion_FLAGS
-      DEPENDENCIES simple_refcnt_checker_component
-                   managed_refcnt_checker_component)
-  set(credit_exhaustion_PARAMETERS
-      LOCALITIES 2
-      THREADS_PER_LOCALITY 2)
-
-  set(local_embedded_ref_to_remote_object_FLAGS
-      DEPENDENCIES simple_refcnt_checker_component
-                   managed_refcnt_checker_component)
-  set(local_embedded_ref_to_remote_object_PARAMETERS
-      LOCALITIES 2
-      THREADS_PER_LOCALITY 2)
-
-  set(remote_embedded_ref_to_local_object_FLAGS
-      DEPENDENCIES simple_refcnt_checker_component
-                   managed_refcnt_checker_component)
-  set(remote_embedded_ref_to_local_object_PARAMETERS
-      LOCALITIES 2
-      THREADS_PER_LOCALITY 2)
-
-  set(remote_embedded_ref_to_remote_object_FLAGS
-      DEPENDENCIES simple_refcnt_checker_component
-                   managed_refcnt_checker_component)
-  set(remote_embedded_ref_to_remote_object_PARAMETERS
-      LOCALITIES 2
-      THREADS_PER_LOCALITY 2)
-
-  set(scoped_ref_to_remote_object_FLAGS
-      DEPENDENCIES simple_refcnt_checker_component
-                   managed_refcnt_checker_component)
-  set(scoped_ref_to_remote_object_PARAMETERS
-      LOCALITIES 2
-      THREADS_PER_LOCALITY 2)
-
-  set(refcnted_symbol_to_remote_object_FLAGS
-      DEPENDENCIES simple_refcnt_checker_component
-                   managed_refcnt_checker_component)
-  set(refcnted_symbol_to_remote_object_PARAMETERS
-      LOCALITIES 2
-      THREADS_PER_LOCALITY 2)
-
-  set(uncounted_symbol_to_remote_object_FLAGS
-      DEPENDENCIES simple_refcnt_checker_component
-                   managed_refcnt_checker_component)
-  set(uncounted_symbol_to_remote_object_PARAMETERS
-      LOCALITIES 2
-      THREADS_PER_LOCALITY 2)
+  set(__localities LOCALITIES 2)
 endif()
 
-set(find_ids_from_prefix_PARAMETERS LOCALITIES 2)
-set(find_clients_from_prefix_PARAMETERS LOCALITIES 2)
+set(tests ${tests}
+    credit_exhaustion
+    local_embedded_ref_to_remote_object
+    remote_embedded_ref_to_local_object
+    remote_embedded_ref_to_remote_object
+    refcnted_symbol_to_remote_object
+    scoped_ref_to_remote_object
+    uncounted_symbol_to_remote_object
+    )
 
-set(get_colocation_id_PARAMETERS
-    LOCALITIES 2)
+set(credit_exhaustion_FLAGS
+    DEPENDENCIES simple_refcnt_checker_component
+                 managed_refcnt_checker_component)
+set(credit_exhaustion_PARAMETERS
+    ${__localities} THREADS_PER_LOCALITY 2)
+
+set(local_embedded_ref_to_remote_object_FLAGS
+    DEPENDENCIES simple_refcnt_checker_component
+                 managed_refcnt_checker_component)
+set(local_embedded_ref_to_remote_object_PARAMETERS
+    ${__localities} THREADS_PER_LOCALITY 2)
+
+set(remote_embedded_ref_to_local_object_FLAGS
+    DEPENDENCIES simple_refcnt_checker_component
+                 managed_refcnt_checker_component)
+set(remote_embedded_ref_to_local_object_PARAMETERS
+    ${__localities} THREADS_PER_LOCALITY 2)
+
+set(remote_embedded_ref_to_remote_object_FLAGS
+    DEPENDENCIES simple_refcnt_checker_component
+                 managed_refcnt_checker_component)
+set(remote_embedded_ref_to_remote_object_PARAMETERS
+    ${__localities} THREADS_PER_LOCALITY 2)
+
+set(scoped_ref_to_remote_object_FLAGS
+    DEPENDENCIES simple_refcnt_checker_component
+                 managed_refcnt_checker_component)
+set(scoped_ref_to_remote_object_PARAMETERS
+    ${__localities} THREADS_PER_LOCALITY 2)
+
+set(refcnted_symbol_to_remote_object_FLAGS
+    DEPENDENCIES simple_refcnt_checker_component
+                 managed_refcnt_checker_component)
+set(refcnted_symbol_to_remote_object_PARAMETERS
+    ${__localities} THREADS_PER_LOCALITY 2)
+
+set(uncounted_symbol_to_remote_object_FLAGS
+    DEPENDENCIES simple_refcnt_checker_component
+                 managed_refcnt_checker_component)
+set(uncounted_symbol_to_remote_object_PARAMETERS
+  ${__localities} THREADS_PER_LOCALITY 2)
+
+set(find_ids_from_prefix_PARAMETERS ${__localities})
+set(find_clients_from_prefix_PARAMETERS ${__localities})
+
+set(get_colocation_id_PARAMETERS ${__localities})
 
 set(local_address_rebind_FLAGS
     DEPENDENCIES iostreams_component simple_mobile_object_component)
-set(local_address_rebind_PARAMETERS
-    THREADS_PER_LOCALITY 4)
+set(local_address_rebind_PARAMETERS THREADS_PER_LOCALITY 4)
 
 set(scoped_ref_to_local_object_FLAGS
     DEPENDENCIES simple_refcnt_checker_component
                  managed_refcnt_checker_component)
-set(scoped_ref_to_local_object_PARAMETERS
-    THREADS_PER_LOCALITY 4)
+set(scoped_ref_to_local_object_PARAMETERS THREADS_PER_LOCALITY 4)
 
 set(local_embedded_ref_to_local_object_FLAGS
     DEPENDENCIES simple_refcnt_checker_component
                  managed_refcnt_checker_component)
-set(local_embedded_ref_to_local_object_PARAMETERS
-    THREADS_PER_LOCALITY 4)
+set(local_embedded_ref_to_local_object_PARAMETERS THREADS_PER_LOCALITY 4)
 
 set(refcnted_symbol_to_local_object_FLAGS
     DEPENDENCIES simple_refcnt_checker_component
                  managed_refcnt_checker_component)
-set(refcnted_symbol_to_local_object_PARAMETERS
-    THREADS_PER_LOCALITY 4)
+set(refcnted_symbol_to_local_object_PARAMETERS THREADS_PER_LOCALITY 4)
 
 set(uncounted_symbol_to_local_object_FLAGS
     DEPENDENCIES simple_refcnt_checker_component
                  managed_refcnt_checker_component)
-set(uncounted_symbol_to_local_object_PARAMETERS
-    THREADS_PER_LOCALITY 4)
+set(uncounted_symbol_to_local_object_PARAMETERS THREADS_PER_LOCALITY 4)
 
 set(split_credit_FLAGS
     DEPENDENCIES simple_refcnt_checker_component
                  managed_refcnt_checker_component)
-set(split_credit_PARAMETERS
-    LOCALITIES 2
-    THREADS_PER_LOCALITY 2)
+set(split_credit_PARAMETERS ${__localities} THREADS_PER_LOCALITY 2)
 
 foreach(test ${tests})
   set(sources

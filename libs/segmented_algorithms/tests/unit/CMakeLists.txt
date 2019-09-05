@@ -42,6 +42,10 @@ set(tests
     partitioned_vector_reduce
    )
 
+if(HPX_WITH_NETWORKING)
+  set(__localities LOCALITIES 2)
+endif()
+
 # add dependencies to partitioned_vector_target when Cuda is enabled
 if(HPX_WITH_CUDA)
   include_directories(${CUDA_INCLUDE_DIRS})
@@ -55,7 +59,7 @@ foreach(test ${tests})
       ${test}.cpp)
 
   set(${test}_FLAGS DEPENDENCIES partitioned_vector_component)
-  set(${test}_PARAMETERS LOCALITIES 2 THREADS_PER_LOCALITY 4)
+  set(${test}_PARAMETERS ${__localities} THREADS_PER_LOCALITY 4)
 
   source_group("Source Files" FILES ${sources})
 

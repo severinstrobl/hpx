@@ -46,6 +46,8 @@ if(HPX_WITH_NETWORKING)
     set(launch_process_PARAMETERS
       --launch=$<TARGET_FILE:launched_process_test>
       --hpx:expect-connecting-localities)
+
+  set(__localities LOCALITIES 2)
 endif()
 
 set(action_invoke_no_more_than_PARAMETERS
@@ -54,25 +56,25 @@ set(action_invoke_no_more_than_FLAGS
     DEPENDENCIES iostreams_component)
 
 set(colocated_distribution_policy_PARAMETERS
-    LOCALITIES 2
+    ${__localities}
     THREADS_PER_LOCALITY 2)
 
 set(copy_component_PARAMETERS
-    LOCALITIES 2
+    ${__localities}
     THREADS_PER_LOCALITY 2)
 
 set(get_ptr_PARAMETERS
-    LOCALITIES 2
+    ${__localities}
     THREADS_PER_LOCALITY 2)
 
 set(migrate_component_PARAMETERS
-    LOCALITIES 2
+    ${__localities}
     THREADS_PER_LOCALITY 2)
 set(migrate_component_FLAGS
     DEPENDENCIES iostreams_component)
 
 set(migrate_polymorphic_component_PARAMETERS
-    LOCALITIES 2
+    ${__localities}
     THREADS_PER_LOCALITY 2)
 set(migrate_polymorphic_component_FLAGS
     DEPENDENCIES iostreams_component)
@@ -95,9 +97,9 @@ set(inheritance_3_classes_concrete_FLAGS
 set(migrate_component_to_storage_FLAGS
     DEPENDENCIES unordered_component component_storage_component)
 
-set(new__PARAMETERS LOCALITIES 2)
-set(new_binpacking_PARAMETERS LOCALITIES 2)
-set(new_colocated_PARAMETERS LOCALITIES 2)
+set(new__PARAMETERS ${__localities})
+set(new_binpacking_PARAMETERS ${__localities})
+set(new_colocated_PARAMETERS ${__localities})
 
 foreach(test ${tests})
   set(sources

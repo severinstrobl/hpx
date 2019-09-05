@@ -12,6 +12,7 @@
 
 #include <hpx/config.hpp>
 
+#if defined(HPX_HAVE_NETWORKING)
 #include <hpx/runtime/actions_fwd.hpp>
 #include <hpx/runtime/naming_fwd.hpp>
 #include <hpx/runtime/parcelset_fwd.hpp>
@@ -45,14 +46,6 @@ namespace hpx { namespace actions
     /// serialization of action instances through a unique_ptr.
     struct HPX_EXPORT base_action
     {
-        /// The type of an action defines whether this action will be executed
-        /// directly or by a HPX-threads
-        enum action_type
-        {
-            plain_action = 0, ///< The action will be executed by a newly created thread
-            direct_action = 1 ///< The action needs to be executed directly
-        };
-
         /// Destructor
         virtual ~base_action();
 
@@ -66,7 +59,7 @@ namespace hpx { namespace actions
 
         /// The function \a get_action_type returns whether this action needs
         /// to be executed in a new thread or directly.
-        virtual action_type get_action_type() const = 0;
+        virtual action_flavor get_action_type() const = 0;
 
         virtual bool has_continuation() const = 0;
 
@@ -189,4 +182,5 @@ namespace hpx { namespace actions
 HPX_TRAITS_SERIALIZED_WITH_ID(hpx::actions::base_action)
 HPX_TRAITS_SERIALIZED_WITH_ID(hpx::actions::base_action_data)
 
+#endif
 #endif

@@ -10,6 +10,8 @@
 #define HPX_RUNTIME_AGAS_HOSTED_COMPONENT_NAMESPACE_HPP
 
 #include <hpx/config.hpp>
+
+#if defined(HPX_HAVE_NETWORKING)
 #include <hpx/lcos/future.hpp>
 #include <hpx/runtime/agas/component_namespace.hpp>
 #include <hpx/runtime/components/component_type.hpp>
@@ -66,4 +68,5 @@ namespace hpx { namespace agas { namespace detail
 
 }}}
 
+#endif
 #endif

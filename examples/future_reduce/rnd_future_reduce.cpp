@@ -7,6 +7,7 @@
 #include <hpx/include/runtime.hpp>
 #include <hpx/lcos/when_all.hpp>
 #include <hpx/include/iostreams.hpp>
+#include <hpx/timing.hpp>
 //
 #include <random>
 #include <utility>

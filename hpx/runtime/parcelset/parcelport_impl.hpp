@@ -11,6 +11,8 @@
 #define HPX_PARCELSET_PARCELPORT_IMPL_HPP
 
 #include <hpx/config.hpp>
+
+#if defined(HPX_HAVE_NETWORKING)
 #include <hpx/assertion.hpp>
 #include <hpx/errors.hpp>
 #include <hpx/functional/bind_front.hpp>
@@ -970,4 +972,5 @@ namespace hpx { namespace parcelset
     };
 }}
 
+#endif
 #endif

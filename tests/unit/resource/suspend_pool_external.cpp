@@ -14,6 +14,7 @@
 #include <hpx/runtime/threads/policies/schedulers.hpp>
 #include <hpx/runtime/threads/thread_helpers.hpp>
 #include <hpx/testing.hpp>
+#include <hpx/timing.hpp>
 
 #include <atomic>
 #include <cstddef>

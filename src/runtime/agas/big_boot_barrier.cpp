@@ -8,6 +8,8 @@
 ////////////////////////////////////////////////////////////////////////////////
 
 #include <hpx/config.hpp>
+
+#if defined(HPX_HAVE_NETWORKING)
 #include <hpx/assertion.hpp>
 #include <hpx/runtime.hpp>
 #include <hpx/runtime/actions/action_support.hpp>
@@ -224,7 +226,6 @@ namespace hpx { namespace agas { namespace detail
 
 namespace hpx { namespace agas
 {
-
     template <typename Action, typename... Args>
     void big_boot_barrier::apply(
         std::uint32_t source_locality_id
@@ -901,3 +902,4 @@ big_boot_barrier& get_big_boot_barrier()
 
 }}
 
+#endif

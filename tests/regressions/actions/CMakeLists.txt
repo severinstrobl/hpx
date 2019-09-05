@@ -17,23 +17,27 @@ set(tests
     return_non_default_constructible_2847
    )
 
+if(HPX_WITH_NETWORKING)
+  set(__localities LOCALITIES 2)
+endif()
+
 set(plain_action_1330_FLAGS
     DEPENDENCIES iostreams_component)
 
 set(plain_action_move_semantics_FLAGS
     DEPENDENCIES action_move_semantics_component)
 set(plain_action_move_semantics_PARAMETERS
-    LOCALITIES 2
+    ${__localities}
     THREADS_PER_LOCALITY 1)
 
 set(component_action_move_semantics_FLAGS
     DEPENDENCIES action_move_semantics_component)
 set(component_action_move_semantics_PARAMETERS
-    LOCALITIES 2
+    ${__localities}
     THREADS_PER_LOCALITY 1)
 
-set(return_future_2847_PARAMETERS LOCALITIES 2)
-set(return_non_default_constructible_2847_PARAMETERS LOCALITIES 2)
+set(return_future_2847_PARAMETERS ${__localities})
+set(return_non_default_constructible_2847_PARAMETERS ${__localities})
 
 foreach(test ${tests})
   set(sources

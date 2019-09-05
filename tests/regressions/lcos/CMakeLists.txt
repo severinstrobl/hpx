@@ -57,28 +57,32 @@ set(tests
     when_all_vectors_1623
    )
 
+if(HPX_WITH_NETWORKING)
+  set(__localities LOCALITIES 2)
+endif()
+
 set(promise_1620_FLAGS DEPENDENCIES iostreams_component)
 set(dataflow_future_swap_FLAGS DEPENDENCIES iostreams_component)
 set(dataflow_future_swap_PARAMETERS THREADS_PER_LOCALITY 4)
-set(after_588_PARAMETERS LOCALITIES 2)
-set(async_action_1813_PARAMETERS LOCALITIES 2)
-set(async_callback_with_bound_callback_PARAMETERS LOCALITIES 2)
+set(after_588_PARAMETERS ${__localities})
+set(async_action_1813_PARAMETERS ${__localities})
+set(async_callback_with_bound_callback_PARAMETERS ${__localities})
 set(async_callback_non_deduced_context_PARAMETERS THREADS_PER_LOCALITY 4)
-set(broadcast_unwrap_future_2885_PARAMETERS LOCALITIES 2 THREADS_PER_LOCALITY 4)
-set(broadcast_wait_for_2822_PARAMETERS LOCALITIES 2 THREADS_PER_LOCALITY 4)
+set(broadcast_unwrap_future_2885_PARAMETERS ${__localities} THREADS_PER_LOCALITY 4)
+set(broadcast_wait_for_2822_PARAMETERS ${__localities} THREADS_PER_LOCALITY 4)
 set(channel_2916_FLAGS DEPENDENCIES iostreams_component)
 set(channel_2916_PARAMETERS THREADS_PER_LOCALITY 4)
-set(future_hang_on_get_629_PARAMETERS LOCALITIES 2 THREADS_PER_LOCALITY 2)
+set(future_hang_on_get_629_PARAMETERS ${__localities} THREADS_PER_LOCALITY 2)
 set(dataflow_future_swap2_FLAGS DEPENDENCIES iostreams_component)
 set(dataflow_launch_775_PARAMETERS THREADS_PER_LOCALITY 2)
 set(dataflow_recursion_1613_PARAMETERS THREADS_PER_LOCALITY 2)
 set(exception_from_continuation_1613_PARAMETERS THREADS_PER_LOCALITY 2)
 set(future_hang_on_wait_with_callback_629_PARAMETERS THREADS_PER_LOCALITY 4)
 set(ignore_while_locked_1485_PARAMETERS THREADS_PER_LOCALITY 2)
-set(lifetime_588_PARAMETERS LOCALITIES 2 THREADS_PER_LOCALITY 2)
-set(lifetime_588_1_PARAMETERS LOCALITIES 2 THREADS_PER_LOCALITY 2)
-set(multiple_gather_ops_2001_PARAMETERS LOCALITIES 2)
-set(receive_buffer_1733_PARAMETERS LOCALITIES 2)
+set(lifetime_588_PARAMETERS ${__localities} THREADS_PER_LOCALITY 2)
+set(lifetime_588_1_PARAMETERS ${__localities} THREADS_PER_LOCALITY 2)
+set(multiple_gather_ops_2001_PARAMETERS ${__localities})
+set(receive_buffer_1733_PARAMETERS ${__localities})
 set(safely_destroy_cv_1481_PARAMETERS THREADS_PER_LOCALITY 2)
 set(shared_mutex_1702_PARAMETERS THREADS_PER_LOCALITY 4)
 set(sliding_semaphore_2338_PARAMETERS THREADS_PER_LOCALITY 2)
@@ -114,7 +118,7 @@ add_hpx_regression_test(
   "lcos" after_588_4
   EXECUTABLE after_588
   PSEUDO_DEPS_NAME after_588
-  LOCALITIES 2
+  ${__localities}
   THREADS_PER_LOCALITY 4)
 
 # compile only tests

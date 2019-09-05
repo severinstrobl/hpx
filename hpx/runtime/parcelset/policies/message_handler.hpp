@@ -7,6 +7,8 @@
 #define HPX_RUNTIME_PARCELSET_POLICIES_MESSAGE_HANDLER_FEB_24_2013_1141AM
 
 #include <hpx/config.hpp>
+
+#if defined(HPX_HAVE_NETWORKING)
 #include <hpx/errors.hpp>
 #include <hpx/runtime/parcelset_fwd.hpp>
 #include <hpx/functional/function.hpp>
@@ -34,4 +36,5 @@ namespace hpx { namespace parcelset { namespace policies
     };
 }}}
 
+#endif
 #endif

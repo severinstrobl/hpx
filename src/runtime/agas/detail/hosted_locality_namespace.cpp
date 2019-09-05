@@ -9,6 +9,7 @@
 
 #include <hpx/config.hpp>
 
+#if defined(HPX_HAVE_NETWORKING)
 #include <hpx/assertion.hpp>
 #include <hpx/async.hpp>
 #include <hpx/runtime/agas/detail/hosted_locality_namespace.hpp>
@@ -116,3 +117,5 @@ namespace hpx { namespace agas { namespace detail
         return action(gid_, name).get_gid();
     }
 }}}
+
+#endif

@@ -8,8 +8,11 @@ set(tests
     all_to_all
    )
 
-set(all_reduce_PARAMETERS LOCALITIES 2)
-set(all_to_all_PARAMETERS LOCALITIES 2)
+if(HPX_WITH_NETWORKING)
+  set(all_reduce_PARAMETERS LOCALITIES 2)
+  set(all_to_all_PARAMETERS LOCALITIES 2)
+endif()
+
 
 foreach(test ${tests})
   set(sources

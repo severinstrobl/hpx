@@ -80,25 +80,29 @@ if(HPX_WITH_AWAIT)
   set(await_PARAMETERS THREADS_PER_LOCALITY 4)
 endif()
 
-set(apply_colocated_PARAMETERS LOCALITIES 2)
+if(HPX_WITH_NETWORKING)
+  set(__localities LOCALITIES 2)
+endif()
+
+set(apply_colocated_PARAMETERS ${__localities})
 set(apply_local_PARAMETERS THREADS_PER_LOCALITY 4)
 set(apply_local_executor_PARAMETERS THREADS_PER_LOCALITY 4)
-set(apply_remote_PARAMETERS LOCALITIES 2)
-set(apply_remote_client_PARAMETERS LOCALITIES 2)
-set(async_cb_colocated_PARAMETERS LOCALITIES 2)
+set(apply_remote_PARAMETERS ${__localities})
+set(apply_remote_client_PARAMETERS ${__localities})
+set(async_cb_colocated_PARAMETERS ${__localities})
 
-set(async_continue_PARAMETERS LOCALITIES 2)
-set(async_continue_cb_PARAMETERS LOCALITIES 2)
-set(async_continue_cb_colocated_PARAMETERS LOCALITIES 2)
+set(async_continue_PARAMETERS ${__localities})
+set(async_continue_cb_PARAMETERS ${__localities})
+set(async_continue_cb_colocated_PARAMETERS ${__localities})
 set(async_local_PARAMETERS THREADS_PER_LOCALITY 4)
 set(async_local_executor_PARAMETERS THREADS_PER_LOCALITY 4)
-set(async_remote_PARAMETERS LOCALITIES 2)
-set(async_remote_client_PARAMETERS LOCALITIES 2)
-set(async_cb_remote_PARAMETERS LOCALITIES 2)
-set(async_cb_remote_client_PARAMETERS LOCALITIES 2)
+set(async_remote_PARAMETERS ${__localities})
+set(async_remote_client_PARAMETERS ${__localities})
+set(async_cb_remote_PARAMETERS ${__localities})
+set(async_cb_remote_client_PARAMETERS ${__localities})
 
-set(broadcast_PARAMETERS LOCALITIES 2)
-set(broadcast_apply_PARAMETERS LOCALITIES 2)
+set(broadcast_PARAMETERS ${__localities})
+set(broadcast_apply_PARAMETERS ${__localities})
 
 set(future_PARAMETERS THREADS_PER_LOCALITY 4)
 set(future_then_PARAMETERS THREADS_PER_LOCALITY 4)
@@ -110,13 +114,13 @@ set(local_barrier_PARAMETERS THREADS_PER_LOCALITY 4)
 set(sliding_semaphore_PARAMETERS THREADS_PER_LOCALITY 4)
 
 set(local_latch_PARAMETERS THREADS_PER_LOCALITY 4)
-set(remote_latch_PARAMETERS LOCALITIES 2)
+set(remote_latch_PARAMETERS ${__localities})
 
 set(local_dataflow_PARAMETERS THREADS_PER_LOCALITY 4)
 set(local_dataflow_executor_PARAMETERS THREADS_PER_LOCALITY 4)
 
 set(remote_dataflow_PARAMETERS THREADS_PER_LOCALITY 4)
-set(remote_dataflow_PARAMETERS LOCALITIES 2)
+set(remote_dataflow_PARAMETERS ${__localities})
 
 set(local_event_PARAMETERS THREADS_PER_LOCALITY 4)
 
@@ -126,7 +130,7 @@ set(packaged_action_PARAMETERS THREADS_PER_LOCALITY 4)
 
 set(promise_PARAMETERS THREADS_PER_LOCALITY 4)
 
-set(reduce_PARAMETERS LOCALITIES 2)
+set(reduce_PARAMETERS ${__localities})
 
 set(run_guarded_PARAMETERS THREADS_PER_LOCALITY 4)
 

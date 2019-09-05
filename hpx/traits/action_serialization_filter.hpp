@@ -6,6 +6,9 @@
 #if !defined(HPX_TRAITS_ACTION_SERIALIZATION_FILTER_FEB_14_2013_0903PM)
 #define HPX_TRAITS_ACTION_SERIALIZATION_FILTER_FEB_14_2013_0903PM
 
+#include <hpx/config.hpp>
+
+#if defined(HPX_HAVE_NETWORKING)
 #include <hpx/runtime/parcelset_fwd.hpp>
 #include <hpx/runtime/serialization/serialization_fwd.hpp>
 
@@ -24,5 +27,6 @@ namespace hpx { namespace traits
     };
 }}
 
+#endif
 #endif
 

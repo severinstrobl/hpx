@@ -57,7 +57,9 @@ set(thread_launching_PARAMETERS THREADS_PER_LOCALITY 4)
 
 set(thread_mf_PARAMETERS THREADS_PER_LOCALITY 4)
 
-set(thread_stacksize_PARAMETERS LOCALITIES 2)
+if(HPX_WITH_NETWORKING)
+  set(thread_stacksize_PARAMETERS LOCALITIES 2)
+endif()
 
 set(tss_PARAMETERS THREADS_PER_LOCALITY 4)
 

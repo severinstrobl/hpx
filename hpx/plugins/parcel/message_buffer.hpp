@@ -7,6 +7,9 @@
 #define HPX_RUNTIME_PARCELSET_POLICIES_COALESCING_MESSAGE_BUFFER_MAR_07_2013_1250PM
 
 #include <hpx/config.hpp>
+
+#if defined(HPX_HAVE_NETWORKING) && defined(HPX_HAVE_PARCEL_COALESCING)
+
 #include <hpx/assertion.hpp>
 #include <hpx/runtime/parcelset/locality.hpp>
 #include <hpx/runtime/parcelset/parcel.hpp>
@@ -157,4 +160,5 @@ namespace hpx { namespace plugins { namespace parcel { namespace detail
     };
 }}}}
 
+#endif
 #endif

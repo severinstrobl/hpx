@@ -10,8 +10,13 @@ set(tests
 
 set(unordered_map_FLAGS
     COMPONENT_DEPENDENCIES unordered)
+
+if(HPX_WITH_NETWORKING)
+  set(__localities LOCALITIES 2)
+endif()
+
 set(unordered_map_PARAMETERS
-    LOCALITIES 2
+    ${__localities}
     THREADS_PER_LOCALITY 2)
 
 foreach(test ${tests})
