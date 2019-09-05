@@ -2004,6 +2004,8 @@ endforeach()
 # External build system support (FindHPX.cmake and pkg-config).
 ################################################################################
 
+# Add external target dependencies for pkgconfig
+include(HPX_AddPkgConfigExternalDepsTarget)
 include(HPX_GeneratePackage)
 
 message("")

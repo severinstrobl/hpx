@@ -31,7 +31,7 @@ set(Boost_ADDITIONAL_VERSIONS
     "1.57.0" "1.57")
 set(Boost_MINIMUM_VERSION "1.61" CACHE  INTERNAL "1.61" FORCE)
 
-set(__boost_libraries program_options system)
+set(__boost_libraries system)
 if(HPX_PARCELPORT_VERBS_WITH_LOGGING OR HPX_PARCELPORT_VERBS_WITH_DEV_MODE OR
    HPX_PARCELPORT_LIBFABRIC_WITH_LOGGING OR HPX_PARCELPORT_LIBFABRIC_WITH_DEV_MODE)
   set(__boost_libraries ${__boost_libraries} log log_setup date_time chrono thread)
@@ -94,7 +94,7 @@ endif()
 set_property(TARGET hpx::boost APPEND PROPERTY INTERFACE_INCLUDE_DIRECTORIES ${Boost_INCLUDE_DIRS})
 set_property(TARGET hpx::boost APPEND PROPERTY INTERFACE_LINK_LIBRARIES ${Boost_LIBRARIES})
 
-find_package(Threads REQUIRED)
+find_package(Threads QUIET REQUIRED)
 set_property(TARGET hpx::boost APPEND PROPERTY INTERFACE_LINK_LIBRARIES Threads::Threads)
 
 if(HPX_WITH_COMPRESSION_BZIP2 OR HPX_WITH_COMPRESSION_ZLIB)
