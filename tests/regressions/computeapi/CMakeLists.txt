@@ -12,9 +12,6 @@ foreach(test ${tests})
   set(sources
       ${test}.cpp)
 
-  set(${test}_FLAGS
-    DEPENDENCIES ${CUDA_LIBRARIES} ${CUDA_CUBLAS_LIBRARIES})
-
   source_group("Source Files" FILES ${sources})
 
   # add example executable
@@ -25,7 +22,6 @@ foreach(test ${tests})
                      HPX_PREFIX ${HPX_BUILD_PREFIX}
                      FOLDER "Tests/Regressions/Compute")
 
-  target_include_directories(${test}_test SYSTEM PRIVATE ${CUDA_INCLUDE_DIRS})
   add_hpx_regression_test("computeapi" ${test} ${${test}_PARAMETERS})
 
 endforeach()

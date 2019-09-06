@@ -156,6 +156,7 @@ function(add_hpx_library name)
   if(HPX_WITH_CUDA AND NOT HPX_WITH_CUDA_CLANG)
     cuda_add_library(${name} ${${name}_linktype} ${exclude_from_all}
       ${${name}_SOURCES} ${${name}_HEADERS} ${${name}_AUXILIARY})
+    cuda_add_cublas_to_target(${name})
   else()
     add_library(${name} ${${name}_linktype} ${exclude_from_all}
       ${${name}_SOURCES} ${${name}_HEADERS} ${${name}_AUXILIARY})

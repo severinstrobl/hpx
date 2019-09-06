@@ -16,8 +16,8 @@
 # We require at least CMake V3.6.3
 cmake_minimum_required(VERSION 3.6.3 FATAL_ERROR)
 
-if (HPX_WITH_CUDA AND CMAKE_VERSION VERSION_LESS 3.9)
-  message(FATAL_ERROR "CUDA support requires at least CMake 3.9.")
+if (HPX_WITH_CUDA AND CMAKE_VERSION VERSION_LESS 3.10)
+  message(FATAL_ERROR "CUDA support requires at least CMake 3.10.")
 endif()
 
 # Overrides must go before the project() statement, otherwise they are ignored.
@@ -363,14 +363,6 @@ hpx_option(HPX_WITH_CUDA BOOL
   "Enable CUDA support (default: OFF)" OFF ADVANCED)
 hpx_option(HPX_WITH_CUDA_CLANG BOOL
   "Use clang to compile CUDA code (default: OFF)" OFF ADVANCED)
-if(HPX_WITH_CUDA)
-  find_package(CUDA REQUIRED)
-  set(HPX_WITH_COMPUTE On)
-  hpx_add_config_define(HPX_HAVE_CUDA)
-  hpx_add_config_define(HPX_HAVE_COMPUTE)
-  # keywords for target_link_libraries (cuda)
-  set(CUDA_LINK_LIBRARIES_KEYWORD "PRIVATE")
-endif()
 if(HPX_WITH_CUDA_CLANG AND NOT (CMAKE_CXX_COMPILER_ID STREQUAL "Clang"))
   hpx_error("To use Cuda Clang, please select Clang as your default C++ compiler")
 endif()
@@ -1147,37 +1139,7 @@ hpx_detect_cpp_dialect()
 ################################################################################
 # CUDA features
 ################################################################################
-if(HPX_WITH_CUDA)
-  if(NOT HPX_WITH_CUDA_CLANG)
-    if(NOT MSVC)
-      hpx_library_dir(${CUDA_TOOLKIT_ROOT_DIR}/lib64)
-      link_directories(${CUDA_TOOLKIT_ROOT_DIR}/lib64)
-      #set(CUDA_NVCC_FLAGS_DEBUG ${CUDA_NVCC_FLAGS_DEBUG};-D_DEBUG;-O0;-g;-G)
-      #set(CUDA_NVCC_FLAGS_RELWITHDEBINFO ${CUDA_NVCC_FLAGS_RELWITHDEBINFO};-DNDEBUG;-O3;-g)
-      #set(CUDA_NVCC_FLAGS_MINSIZEREL ${CUDA_NVCC_FLAGS_MINSIZEREL};-DNDEBUG;-O1)
-      #set(CUDA_NVCC_FLAGS_RELEASE ${CUDA_NVCC_FLAGS_RELEASE};-DNDEBUG;-O3)
-      set(CUDA_NVCC_FLAGS ${CUDA_NVCC_FLAGS};-w)
-    else()
-      set(CUDA_PROPAGATE_HOST_FLAGS OFF)
-      hpx_library_dir(${CUDA_TOOLKIT_ROOT_DIR}/lib/x64)
-      link_directories(${CUDA_TOOLKIT_ROOT_DIR}/lib/x64)
-      set(CUDA_NVCC_FLAGS_DEBUG ${CUDA_NVCC_FLAGS_DEBUG};-D_DEBUG;-O0;-g;-G;-Xcompiler=-MDd;-Xcompiler=-Od;-Xcompiler=-Zi;-Xcompiler=-bigobj)
-      set(CUDA_NVCC_FLAGS_RELWITHDEBINFO ${CUDA_NVCC_FLAGS_RELWITHDEBINFO};-DNDEBUG;-O2;-g;-Xcompiler=-MD,-O2,-Zi;-Xcompiler=-bigobj)
-      set(CUDA_NVCC_FLAGS_MINSIZEREL ${CUDA_NVCC_FLAGS_MINSIZEREL};-DNDEBUG;-O1;-Xcompiler=-MD,-O1;-Xcompiler=-bigobj)
-      set(CUDA_NVCC_FLAGS_RELEASE ${CUDA_NVCC_FLAGS_RELEASE};-DNDEBUG;-O2;-Xcompiler=-MD,-Ox;-Xcompiler=-bigobj)
-    endif()
-    set(CUDA_SEPARABLE_COMPILATION ON)
-    set(CUDA_NVCC_FLAGS ${CUDA_NVCC_FLAGS};${CXX_FLAG})
-    set(CUDA_NVCC_FLAGS ${CUDA_NVCC_FLAGS};--expt-relaxed-constexpr)
-    set(CUDA_NVCC_FLAGS ${CUDA_NVCC_FLAGS};--expt-extended-lambda)
-    set(CUDA_NVCC_FLAGS ${CUDA_NVCC_FLAGS};--default-stream per-thread)
-  else()
-    hpx_add_target_compile_option(-DBOOST_THREAD_USES_MOVE PUBLIC)
-    hpx_libraries(cudart)
-    hpx_library_dir(${CUDA_TOOLKIT_ROOT_DIR}/lib64)
-    link_directories(${CUDA_TOOLKIT_ROOT_DIR}/lib64)
-  endif()
-endif()
+include(HPX_SetupCuda)
 
 # Store option value passed by an user for HPX_WITH_CXX14_RETURN_TYPE_DEDUCTION.
 if(HPX_WITH_CXX14_RETURN_TYPE_DEDUCTION)
@@ -1609,8 +1571,7 @@ set(HPX_WITH_TARGET_ARCHITECTURE ${__target_arch} CACHE INTERNAL "" FORCE)
 #   These are all dependencies needed to build the core library. Dependencies
 #   that are only needed by plugins, examples or tests should be found
 #   seperately in the appropriate subdirectory.
-# When a package is found, the necessary include paths are set, and the libraries
-# are added to the HPX_LIBRARIES variables
+# When a package is found, a interface target is created.
 
 # Setup our required Boost libraries.
 include(HPX_SetupBoost)

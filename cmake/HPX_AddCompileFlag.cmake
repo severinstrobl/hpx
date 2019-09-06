@@ -23,7 +23,7 @@ function(hpx_add_target_compile_option FLAG)
   else()
     set(_dest HPX_TARGET_COMPILE_OPTIONS_PRIVATE)
   endif()
-  
+
   set(_configurations "none")
   if(HPX_ADD_TARGET_COMPILE_OPTION_CONFIGURATIONS)
     set(_configurations ${HPX_ADD_TARGET_COMPILE_OPTION_CONFIGURATIONS})
@@ -44,9 +44,6 @@ function(hpx_add_target_compile_option FLAG)
     endforeach()
   endforeach()
 
-#  if(HPX_WITH_CUDA AND (NOT MSVC))
-#      hpx_add_compile_flag(${FLAG})
-#  endif()
 endfunction()
 
 function(hpx_add_target_compile_option_if_available FLAG)
@@ -155,9 +152,6 @@ function(hpx_add_target_compile_definition FLAG)
     set_property(GLOBAL APPEND PROPERTY ${_dest} "${_conf}")
   endforeach()
 
-#  if(HPX_WITH_CUDA AND (NOT MSVC))
-#    hpx_add_compile_flag(-D${FLAG})
-#  endif()
 endfunction()
 
 function(hpx_add_compile_flag)

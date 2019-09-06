@@ -7,7 +7,7 @@
 
 function(add_hpx_executable name)
   # retrieve arguments
-  set(options EXCLUDE_FROM_ALL EXCLUDE_FROM_DEFAULT_BUILD AUTOGLOB NOLIBS NOHPX_INIT)
+  set(options EXCLUDE_FROM_ALL EXCLUDE_FROM_DEFAULT_BUILD AUTOGLOB NOLIBS NOHPX_INIT CUBLAS)
   set(one_value_args INI FOLDER SOURCE_ROOT HEADER_ROOT SOURCE_GLOB HEADER_GLOB OUTPUT_SUFFIX INSTALL_SUFFIX LANGUAGE HPX_PREFIX)
   set(multi_value_args SOURCES HEADERS AUXILIARY DEPENDENCIES COMPONENT_DEPENDENCIES COMPILE_FLAGS LINK_FLAGS)
   cmake_parse_arguments(${name} "${options}" "${one_value_args}" "${multi_value_args}" ${ARGN})
@@ -132,6 +132,9 @@ function(add_hpx_executable name)
   if(HPX_WITH_CUDA AND NOT HPX_WITH_CUDA_CLANG)
     cuda_add_executable(${name}
       ${${name}_SOURCES} ${${name}_HEADERS} ${${name}_AUXILIARY})
+    if (${name}_CUBLAS)
+      cuda_add_cublas_to_target(${name})
+    endif()
   else()
     add_executable(${name}
       ${${name}_SOURCES} ${${name}_HEADERS} ${${name}_AUXILIARY})
