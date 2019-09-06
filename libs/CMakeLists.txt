@@ -21,6 +21,7 @@ set(HPX_LIBS
   datastructures
   debugging
   errors
+  execution
   filesystem
   format
   functional
@@ -88,7 +89,7 @@ foreach(lib ${HPX_LIBS})
   add_subdirectory(${lib})
 
   set(MODULE_FORCE_LINKING_INCLUDES
-    "${MODULE_FORCE_LINKING_INCLUDES}#include <hpx/${lib}/force_linking.hpp>\n")
+    "${MODULE_FORCE_LINKING_INCLUDES}\n#include <hpx/${lib}/force_linking.hpp>\n")
 
   set(MODULE_FORCE_LINKING_CALLS
     "${MODULE_FORCE_LINKING_CALLS}\n        ${lib}::force_linking();")

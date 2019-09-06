@@ -11,9 +11,9 @@
 #define HPX_LCOS_LOCAL_SPINLOCK_NO_BACKOFF
 
 #include <hpx/config.hpp>
-#include <hpx/runtime/threads/thread_helpers.hpp>
 #include <hpx/concurrency/itt_notify.hpp>
-#include <hpx/concurrency/register_locks.hpp>
+#include <hpx/execution/register_locks.hpp>
+#include <hpx/runtime/threads/thread_helpers.hpp>
 
 #if defined(HPX_WINDOWS)
 #  include <boost/smart_ptr/detail/spinlock.hpp>

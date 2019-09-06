@@ -10,8 +10,8 @@
 #include <hpx/config.hpp>
 #include <hpx/assertion.hpp>
 #include <hpx/async.hpp>
-#include <hpx/concurrency/register_locks.hpp>
 #include <hpx/errors.hpp>
+#include <hpx/execution/register_locks.hpp>
 #include <hpx/format.hpp>
 #include <hpx/functional/bind_back.hpp>
 #include <hpx/functional/bind_front.hpp>
@@ -27,8 +27,8 @@
 #include <hpx/runtime/applier/apply.hpp>
 #include <hpx/runtime/components/server/destroy_component.hpp>
 #include <hpx/runtime/naming/resolver_client.hpp>
-#include <hpx/timing/scoped_timer.hpp>
 #include <hpx/thread_support/assert_owns_lock.hpp>
+#include <hpx/timing/scoped_timer.hpp>
 #include <hpx/util/get_and_reset_value.hpp>
 #include <hpx/util/insert_checked.hpp>
 

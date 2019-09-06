@@ -24,6 +24,7 @@ All modules
    /libs/datastructures/docs/index.rst
    /libs/debugging/docs/index.rst
    /libs/errors/docs/index.rst
+   /libs/execution/docs/index.rst
    /libs/filesystem/docs/index.rst
    /libs/format/docs/index.rst
    /libs/functional/docs/index.rst

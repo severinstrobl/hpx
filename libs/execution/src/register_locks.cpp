@@ -6,8 +6,8 @@
 
 #include <hpx/config.hpp>
 #include <hpx/assertion.hpp>
-#include <hpx/concurrency/register_locks.hpp>
 #include <hpx/errors.hpp>
+#include <hpx/execution/register_locks.hpp>
 
 #include <cstddef>
 #include <map>

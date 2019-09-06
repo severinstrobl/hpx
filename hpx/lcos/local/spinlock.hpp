@@ -14,10 +14,10 @@
 
 #include <hpx/config.hpp>
 
+#include <hpx/concurrency/itt_notify.hpp>
+#include <hpx/execution/register_locks.hpp>
 #include <hpx/runtime/threads/thread_helpers.hpp>
 #include <hpx/util/detail/yield_k.hpp>
-#include <hpx/concurrency/itt_notify.hpp>
-#include <hpx/concurrency/register_locks.hpp>
 
 #include <cstddef>
 #include <cstdint>

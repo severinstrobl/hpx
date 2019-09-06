@@ -7,7 +7,7 @@
 #define HPX_COMPONENTS_SERVER_LOCKING_HOOK_OCT_17_2012_0732PM
 
 #include <hpx/config.hpp>
-#include <hpx/concurrency/register_locks.hpp>
+#include <hpx/execution/register_locks.hpp>
 #include <hpx/functional/bind_front.hpp>
 #include <hpx/lcos/local/spinlock.hpp>
 #include <hpx/runtime/get_lva.hpp>

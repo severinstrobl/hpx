@@ -8,8 +8,8 @@
 #include <hpx/runtime/threads/thread_data.hpp>
 
 #include <hpx/assertion.hpp>
-#include <hpx/concurrency/register_locks.hpp>
 #include <hpx/errors.hpp>
+#include <hpx/execution/register_locks.hpp>
 #include <hpx/functional/function.hpp>
 #include <hpx/runtime/naming/address.hpp>
 #include <hpx/thread_support/unlock_guard.hpp>

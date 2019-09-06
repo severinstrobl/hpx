@@ -7,11 +7,10 @@
 #include <hpx/runtime/threads/thread.hpp>
 
 #include <hpx/assertion.hpp>
-#include <hpx/concurrency/register_locks.hpp>
 #include <hpx/errors.hpp>
+#include <hpx/execution/register_locks.hpp>
 #include <hpx/functional/bind.hpp>
 #include <hpx/functional/bind_front.hpp>
-#include <hpx/concurrency/register_locks.hpp>
 #include <hpx/functional/unique_function.hpp>
 #include <hpx/lcos/detail/future_data.hpp>
 #include <hpx/runtime/threads/thread_data_fwd.hpp>

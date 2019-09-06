@@ -8,9 +8,9 @@
 #define HPX_LCOS_LOCAL_CONDITION_VARIABLE_HPP
 
 #include <hpx/config.hpp>
-#include <hpx/errors.hpp>
 #include <hpx/concurrency/cache_line_data.hpp>
-#include <hpx/concurrency/register_locks.hpp>
+#include <hpx/errors.hpp>
+#include <hpx/execution/register_locks.hpp>
 #include <hpx/lcos/local/detail/condition_variable.hpp>
 #include <hpx/lcos/local/mutex.hpp>
 #include <hpx/lcos/local/spinlock.hpp>

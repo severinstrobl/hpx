@@ -8,6 +8,8 @@
 
 // TODO: move parcel ports into plugins
 #include <hpx/assertion.hpp>
+#include <hpx/concurrency/itt_notify.hpp>
+#include <hpx/execution/register_locks.hpp>
 #include <hpx/filesystem.hpp>
 #include <hpx/preprocessor/expand.hpp>
 #include <hpx/preprocessor/stringize.hpp>
@@ -15,8 +17,6 @@
 #include <hpx/util/find_prefix.hpp>
 #include <hpx/util/init_ini_data.hpp>
 #include <hpx/util/init_logging.hpp>
-#include <hpx/concurrency/itt_notify.hpp>
-#include <hpx/concurrency/register_locks.hpp>
 #include <hpx/util/register_locks_globally.hpp>
 #include <hpx/util/safe_lexical_cast.hpp>
 #include <hpx/version.hpp>

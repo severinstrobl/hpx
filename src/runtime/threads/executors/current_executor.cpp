@@ -6,8 +6,8 @@
 #include <hpx/runtime/threads/executors/current_executor.hpp>
 
 #include <hpx/assertion.hpp>
-#include <hpx/concurrency/register_locks.hpp>
 #include <hpx/errors.hpp>
+#include <hpx/execution/register_locks.hpp>
 #include <hpx/functional/bind.hpp>
 #include <hpx/runtime/get_worker_thread_num.hpp>
 #include <hpx/runtime/threads/detail/create_thread.hpp>
