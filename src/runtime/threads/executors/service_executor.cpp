@@ -8,6 +8,7 @@
 #include <hpx/assertion.hpp>
 #include <hpx/config/asio.hpp>
 #include <hpx/errors.hpp>
+#include <hpx/execution/this_thread.hpp>
 #include <hpx/runtime/threads/thread_enums.hpp>
 #include <hpx/runtime/threads/thread_helpers.hpp>
 #include <hpx/runtime_fwd.hpp>
@@ -50,15 +51,15 @@ namespace hpx { namespace threads { namespace executors { namespace detail
         std::unique_lock<mutex_type> l(mtx_);
         if (blocking_)
         {
+            std::size_t k = 0;
             while (task_count_ > 0)
             {
                 // We need to cancel the wait process here, since we might block
                 // other running HPX threads.
                 shutdown_cv_.wait_for(l, std::chrono::seconds(1));
-                if (hpx::threads::get_self_ptr())
-                {
-                    hpx::this_thread::suspend();
-                }
+                hpx::execution::this_thread::yield_k(k,
+                    "service_executor::~service_executor");
+                ++k;
             }
         }
     }

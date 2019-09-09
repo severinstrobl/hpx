@@ -7,7 +7,6 @@
 #define HPX_EXECUTION_EXECUTION_CONTEXT_HPP
 
 #include <hpx/execution/execution_context_base.hpp>
-#include <hpx/timing/steady_clock.hpp>
 
 #include <iosfwd>
 

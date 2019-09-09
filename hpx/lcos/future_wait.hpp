@@ -54,7 +54,7 @@ namespace hpx { namespace lcos
         struct wait_each
         {
         protected:
-            void on_future_ready_(threads::thread_id_type const& id)
+            void on_future_ready_(hpx::execution::execution_context ctx)
             {
                 std::size_t oldcount = ready_count_.fetch_add(1);
                 HPX_ASSERT(oldcount < lazy_values_.size());
@@ -62,16 +62,16 @@ namespace hpx { namespace lcos
                 if (oldcount + 1 == lazy_values_.size())
                 {
                     // reactivate waiting thread only if it's not us
-                    if (id != threads::get_self_id())
-                        threads::set_thread_state(id, threads::pending);
+                    if (ctx != hpx::execution::this_thread::execution_context())
+                        ctx.resume();
                     else
                         goal_reached_on_calling_thread_ = true;
                 }
             }
 
             template <typename Index>
-            void on_future_ready(std::false_type,
-                Index i, threads::thread_id_type const& id)
+            void on_future_ready(
+                std::false_type, Index i, hpx::execution::execution_context ctx)
             {
                 if (lazy_values_[i].has_value()) {
                     if (success_counter_)
@@ -81,12 +81,12 @@ namespace hpx { namespace lcos
                 }
 
                 // keep track of ready futures
-                on_future_ready_(id);
+                on_future_ready_(ctx);
             }
 
             template <typename Index>
-            void on_future_ready(std::true_type,
-                Index i, threads::thread_id_type const& id)
+            void on_future_ready(
+                std::true_type, Index i, hpx::execution::execution_context ctx)
             {
                 if (lazy_values_[i].has_value()) {
                     if (success_counter_)
@@ -96,7 +96,7 @@ namespace hpx { namespace lcos
                 }
 
                 // keep track of ready futures
-                on_future_ready_(id);
+                on_future_ready_(ctx);
             }
 
         public:
@@ -157,7 +157,7 @@ namespace hpx { namespace lcos
 
                 // set callback functions to executed when future is ready
                 std::size_t size = lazy_values_.size();
-                threads::thread_id_type id = threads::get_self_id();
+                auto ctx = hpx::execution::this_thread::execution_context();
                 for (std::size_t i = 0; i != size; ++i)
                 {
                     typedef
@@ -170,7 +170,7 @@ namespace hpx { namespace lcos
                     current->set_on_completed([=]() -> void {
                         using is_void = std::is_void<
                             typename traits::future_traits<Future>::type>;
-                        return on_future_ready(is_void{}, i, id);
+                        return on_future_ready(is_void{}, i, ctx);
                     });
                 }
 
@@ -180,7 +180,7 @@ namespace hpx { namespace lcos
                 if (!goal_reached_on_calling_thread_)
                 {
                     // wait for all of the futures to return to become ready
-                    this_thread::suspend(threads::suspended,
+                    hpx::execution::this_thread::suspend(
                         "hpx::lcos::detail::wait_each::operator()");
                 }
 

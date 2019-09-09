@@ -233,11 +233,10 @@ namespace hpx { namespace lcos
                     // execute_deferred might have made the future ready
                     if (!shared_state->is_ready())
                     {
-                        shared_state->set_on_completed(
-                            util::deferred_call(
-                                &wait_some<Sequence>::on_future_ready,
-                                wait_.shared_from_this(),
-                                threads::get_self_id()));
+                        shared_state->set_on_completed(util::deferred_call(
+                            &wait_some<Sequence>::on_future_ready,
+                            wait_.shared_from_this(),
+                            hpx::execution::this_thread::execution_context()));
                         return;
                     }
                 }
@@ -296,13 +295,13 @@ namespace hpx { namespace lcos
         struct wait_some : std::enable_shared_from_this<wait_some<Sequence> > //-V690
         {
         public:
-            void on_future_ready(threads::thread_id_type const& id)
+            void on_future_ready(hpx::execution::execution_context ctx)
             {
                 if (count_.fetch_add(1) + 1 == needed_count_)
                 {
                     // reactivate waiting thread only if it's not us
-                    if (id != threads::get_self_id())
-                        threads::set_thread_state(id, threads::pending);
+                    if (ctx != hpx::execution::this_thread::execution_context())
+                        ctx.resume();
                     else
                         goal_reached_on_calling_thread_ = true;
                 }
@@ -334,7 +333,7 @@ namespace hpx { namespace lcos
                 if (!goal_reached_on_calling_thread_)
                 {
                     // wait for any of the futures to return to become ready
-                    this_thread::suspend(threads::suspended,
+                    hpx::execution::this_thread::suspend(
                         "hpx::detail::wait_some::operator()");
                 }
 

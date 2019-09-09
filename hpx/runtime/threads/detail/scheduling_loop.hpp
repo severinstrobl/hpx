@@ -8,6 +8,10 @@
 
 #include <hpx/config.hpp>
 #include <hpx/assertion.hpp>
+#include <hpx/concurrency/itt_notify.hpp>
+#include <hpx/execution/this_thread.hpp>
+#include <hpx/functional/unique_function.hpp>
+#include <hpx/hardware/timestamp.hpp>
 #include <hpx/runtime/get_thread_name.hpp>
 #include <hpx/runtime/threads/policies/scheduler_base.hpp>
 #include <hpx/runtime/threads/thread_data.hpp>
@@ -15,10 +19,7 @@
 # include <hpx/runtime/threads/scoped_background_timer.hpp>
 #endif
 #include <hpx/state.hpp>
-#include <hpx/hardware/timestamp.hpp>
-#include <hpx/concurrency/itt_notify.hpp>
 #include <hpx/util/safe_lexical_cast.hpp>
-#include <hpx/functional/unique_function.hpp>
 
 #if defined(HPX_HAVE_APEX)
 #include <hpx/util/apex.hpp>
@@ -405,8 +406,8 @@ namespace hpx { namespace threads { namespace detail
                         if (*background_running)
                             idle_loop_count = callbacks.max_idle_loop_count_;
                     }
-                    hpx::this_thread::suspend(
-                        hpx::threads::pending, "background_work");
+                    // Force yield...
+                    hpx::execution::this_thread::yield("background_work");
                 }
 
                 return thread_result_type(terminated, invalid_thread_id);
@@ -435,11 +436,15 @@ namespace hpx { namespace threads { namespace detail
     bool call_background_thread(thread_id_type& background_thread,
         thread_data*& next_thrd, SchedulingPolicy& scheduler,
         std::size_t num_thread, bool running,
-        std::int64_t& background_work_exec_time_init)
+        std::int64_t& background_work_exec_time_init,
+        hpx::execution::this_thread::detail::execution_context_storage*
+            context_storage)
 #else
     bool call_background_thread(thread_id_type& background_thread,
         thread_data*& next_thrd, SchedulingPolicy& scheduler,
-        std::size_t num_thread, bool running)
+        std::size_t num_thread, bool running,
+        hpx::execution::this_thread::detail::execution_context_storage*
+            context_storage)
 #endif
     {
         if (HPX_UNLIKELY(background_thread))
@@ -467,7 +472,7 @@ namespace hpx { namespace threads { namespace detail
 #endif    // HPX_HAVE_BACKGROUND_THREAD_COUNTERS
 
                         // invoke background thread
-                        thrd_stat = (*background_thread)();
+                        thrd_stat = (*background_thread)(context_storage);
 
                         thread_data* next = thrd_stat.get_next_thread();
                         if (next != nullptr && next != background_thread.get())
@@ -562,6 +567,10 @@ namespace hpx { namespace threads { namespace detail
         }
 #endif
 
+        hpx::execution::this_thread::detail::execution_context_storage*
+            context_storage = hpx::execution::this_thread::detail::
+                get_execution_context_storage();
+
         std::size_t added = std::size_t(-1);
         thread_data* next_thrd = nullptr;
         while (true) {
@@ -621,7 +630,7 @@ namespace hpx { namespace threads { namespace detail
                         {
                             tfunc_time_wrapper tfunc_time_collector(idle_rate);
 
-                            // thread returns new required state
+                            // dhread returns new required state
                             // store the returned state in the thread
                             {
                                 is_active_wrapper utilization(counters.is_active_);
@@ -648,7 +657,7 @@ namespace hpx { namespace threads { namespace detail
                                 util::apex_wrapper apex_profiler(
                                     thrd->get_apex_data());
 
-                                thrd_stat = (*thrd)();
+                                thrd_stat = (*thrd)(context_storage);
 
                                 if (thrd_stat.get_previous() == terminated)
                                 {
@@ -661,7 +670,7 @@ namespace hpx { namespace threads { namespace detail
                                     apex_profiler.yield();
                                 }
 #else
-                                thrd_stat = (*thrd)();
+                                thrd_stat = (*thrd)(context_storage);
 #endif
                             }
 
@@ -886,10 +895,11 @@ namespace hpx { namespace threads { namespace detail
     defined(HPX_HAVE_THREAD_IDLE_RATES)
                 // do background work in parcel layer and in agas
                 if (!call_background_thread(background_thread, next_thrd,
-                        scheduler, num_thread, running, bg_work_exec_time_init))
+                        scheduler, num_thread, running, bg_work_exec_time_init,
+                        context_storage))
 #else
                 if (!call_background_thread(background_thread, next_thrd,
-                        scheduler, num_thread, running))
+                        scheduler, num_thread, running, context_storage))
 #endif    // HPX_HAVE_BACKGROUND_THREAD_COUNTERS
                 {
                     // Let the current background thread terminate as soon as
@@ -928,11 +938,12 @@ namespace hpx { namespace threads { namespace detail
     defined(HPX_HAVE_THREAD_IDLE_RATES)
                 // do background work in parcel layer and in agas
                 if (!call_background_thread(background_thread, next_thrd,
-                        scheduler, num_thread, running, bg_work_exec_time_init))
+                        scheduler, num_thread, running, bg_work_exec_time_init,
+                        context_storage))
 #else
                 // do background work in parcel layer and in agas
                 if (!call_background_thread(background_thread, next_thrd,
-                        scheduler, num_thread, running))
+                        scheduler, num_thread, running, context_storage))
 #endif    // HPX_HAVE_BACKGROUND_THREAD_COUNTERS
                 {
                     // Let the current background thread terminate as soon

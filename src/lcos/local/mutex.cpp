@@ -103,7 +103,10 @@ namespace hpx { namespace lcos { namespace local
         HPX_ITT_SYNC_RELEASED(this);
         owner_id_ = threads::invalid_thread_id;
 
-        cond_.notify_one(std::move(l), threads::thread_priority_boost, ec);
+        {
+            util::ignore_while_checking<std::unique_lock<mutex_type> > il(&l);
+            cond_.notify_one(std::move(l), threads::thread_priority_boost, ec);
+        }
     }
 
     ///////////////////////////////////////////////////////////////////////////

@@ -76,6 +76,16 @@ namespace hpx { namespace threads
         exit_funcs_.clear();
     }
 
+    coroutine_type::result_type thread_data::operator()(
+        hpx::execution::this_thread::detail::execution_context_storage*
+            context_storage)
+    {
+        HPX_ASSERT(this == coroutine_.get_thread_id().get());
+        hpx::execution::this_thread::reset_execution_context ctx(
+            context_storage, context_);
+        return coroutine_(set_state_ex(wait_signaled));
+    }
+
     bool thread_data::interruption_point(bool throw_on_interrupt)
     {
         // We do not protect enabled_interrupt_ and requested_interrupt_

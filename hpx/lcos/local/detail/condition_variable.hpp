@@ -9,6 +9,7 @@
 
 #include <hpx/config.hpp>
 #include <hpx/errors.hpp>
+#include <hpx/execution/execution_context.hpp>
 #include <hpx/lcos/local/spinlock.hpp>
 #include <hpx/runtime/threads/thread_data_fwd.hpp>
 #include <hpx/runtime/threads/thread_enums.hpp>
@@ -40,11 +41,12 @@ namespace hpx { namespace lcos { namespace local { namespace detail
                 boost::intrusive::link_mode<boost::intrusive::normal_link>
             > hook_type;
 
-            queue_entry(threads::thread_id_type const& id, void* q)
-              : id_(id), q_(q)
+            queue_entry(hpx::execution::execution_context ctx, void* q)
+              : ctx_(ctx)
+              , q_(q)
             {}
 
-            threads::thread_id_type id_;
+            hpx::execution::execution_context ctx_;
             void* q_;
             hook_type slist_hook_;
         };
@@ -68,7 +70,7 @@ namespace hpx { namespace lcos { namespace local { namespace detail
 
             ~reset_queue_entry()
             {
-                if (e_.id_ != threads::invalid_thread_id)
+                if (e_.ctx_)
                 {
                     queue_type* q = static_cast<queue_type*>(e_.q_);
                     q->erase(last_);     // remove entry from queue

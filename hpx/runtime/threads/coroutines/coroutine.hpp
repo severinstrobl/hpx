@@ -140,6 +140,11 @@ namespace hpx { namespace threads { namespace coroutines
 #endif
         }
 
+        impl_type* impl()
+        {
+            return &impl_;
+        }
+
     private:
         impl_type impl_;
     };

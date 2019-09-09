@@ -122,6 +122,7 @@ namespace hpx
 
 #include <hpx/config.hpp>
 #include <hpx/assertion.hpp>
+#include <hpx/execution/this_thread.hpp>
 #include <hpx/lcos/future.hpp>
 #include <hpx/lcos/local/futures_factory.hpp>
 #include <hpx/lcos/when_any.hpp>
@@ -247,7 +248,8 @@ namespace hpx { namespace lcos
                                 util::deferred_call(
                                     &when_any<Sequence>::on_future_ready,
                                     when_.shared_from_this(),
-                                    idx_, threads::get_self_id()));
+                                    idx_,
+                                    hpx::execution::this_thread::execution_context()));
                             ++idx_;
                             return;
                         }
@@ -313,15 +315,16 @@ namespace hpx { namespace lcos
         struct when_any : std::enable_shared_from_this<when_any<Sequence> > //-V690
         {
         public:
-            void on_future_ready(std::size_t idx, threads::thread_id_type const& id)
+            void on_future_ready(
+                std::size_t idx, hpx::execution::execution_context ctx)
             {
                 std::size_t index_not_initialized =
                     when_any_result<Sequence>::index_error();
                 if (index_.compare_exchange_strong(index_not_initialized, idx))
                 {
                     // reactivate waiting thread only if it's not us
-                    if (id != threads::get_self_id())
-                        threads::set_thread_state(id, threads::pending);
+                    if (ctx != hpx::execution::this_thread::execution_context())
+                        ctx.resume();
                     else
                         goal_reached_on_calling_thread_ = true;
                 }
@@ -352,7 +355,7 @@ namespace hpx { namespace lcos
                 if (!goal_reached_on_calling_thread_)
                 {
                     // wait for any of the futures to return to become ready
-                    this_thread::suspend(threads::suspended,
+                    hpx::execution::this_thread::suspend(
                         "hpx::lcos::detail::when_any::operator()");
                 }
 
