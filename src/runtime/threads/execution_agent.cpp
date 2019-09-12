@@ -6,8 +6,9 @@
 #include <hpx/config.hpp>
 #include <hpx/logging.hpp>
 #include <hpx/errors/throw_exception.hpp>
+#include <hpx/format.hpp>
 
-#include <hpx/runtime/threads/execution_context.hpp>
+#include <hpx/runtime/threads/execution_agent.hpp>
 #include <hpx/runtime/threads/thread_data.hpp>
 #include <hpx/runtime/threads/thread_enums.hpp>
 
@@ -24,18 +25,24 @@
 #include <sstream>
 
 namespace hpx { namespace threads {
-    execution_context::execution_context(
+    execution_agent::execution_agent(
         coroutines::detail::coroutine_impl* coroutine) noexcept
       : self_(coroutine)
     {
     }
 
-    void execution_context::yield(const char* desc)
+    std::string execution_agent::description() const
+    {
+        thread_id_type id = self_.get_thread_id();
+        return hpx::util::format("{}: {}", id, id->get_description());
+    }
+
+    void execution_agent::yield(const char* desc)
     {
         do_yield(desc, hpx::threads::pending);
     }
 
-    void execution_context::yield_k(std::size_t k, const char* desc)
+    void execution_agent::yield_k(std::size_t k, const char* desc)
     {
         if (k < 4)    //-V112
         {
@@ -56,28 +63,28 @@ namespace hpx { namespace threads {
         }
     }
 
-    void execution_context::resume(const char* desc)
+    void execution_agent::resume(const char* desc)
     {
         do_resume(desc, wait_signaled);
     }
 
-    void execution_context::abort(const char* desc)
+    void execution_agent::abort(const char* desc)
     {
         do_resume(desc, wait_abort);
     }
 
-    void execution_context::suspend(const char* desc)
+    void execution_agent::suspend(const char* desc)
     {
         do_yield(desc, suspended);
     }
 
-    void execution_context::sleep_for(
+    void execution_agent::sleep_for(
         hpx::util::steady_duration const& sleep_duration, const char* desc)
     {
         sleep_until(sleep_duration.from_now(), desc);
     }
 
-    void execution_context::sleep_until(
+    void execution_agent::sleep_until(
         hpx::util::steady_time_point const& sleep_time, const char* desc)
     {
         auto now = hpx::util::steady_clock::now();
@@ -111,7 +118,7 @@ namespace hpx { namespace threads {
         };
     }    // namespace detail
 
-    hpx::threads::thread_state_ex_enum execution_context::do_yield(
+    hpx::threads::thread_state_ex_enum execution_agent::do_yield(
         const char* desc, threads::thread_state_enum state)
     {
         thread_id_type id = self_.get_thread_id();
@@ -139,19 +146,17 @@ namespace hpx { namespace threads {
         // handle interrupt and abort
         if (statex == threads::wait_abort)
         {
-            std::ostringstream strm;
-            strm << "thread(" << threads::get_self_id() << ", "
-                  << threads::get_thread_description(id)
-                  << ") aborted (yield returned wait_abort)";
-            HPX_THROW_EXCEPTION(yield_aborted, "suspend",
-                strm.str());
+            HPX_THROW_EXCEPTION(yield_aborted, desc,
+                hpx::util::format(
+                    "thread({}) aborted (yield returned wait_abort)", description())
+            );
         }
 
         return statex;
         // HPX_ASSERT(statex == threads::wait_signaled);
     }
         
-    void execution_context::do_resume(const char* desc,
+    void execution_agent::do_resume(const char* desc,
         hpx::threads::thread_state_ex_enum statex)
     {
         thread_id_type id = self_.get_thread_id();
@@ -180,7 +185,7 @@ namespace hpx { namespace threads {
             case active:
             {
                 hpx::execution::this_thread::yield_k(
-                    k, "hpx::threads::execution_context::resume");
+                    k, "hpx::threads::execution_agent::resume");
                 ++k;
                 LTM_(warning)
                     << "resume: thread is active, retrying state "

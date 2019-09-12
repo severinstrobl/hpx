@@ -344,7 +344,7 @@ namespace hpx { namespace lcos
                                 &when_some<Sequence>::on_future_ready,
                                 when_.shared_from_this(), idx_,
                                 hpx::execution::this_thread::
-                                    execution_context()));
+                                    agent()));
                             ++idx_;
                             return;
                         }
@@ -413,7 +413,7 @@ namespace hpx { namespace lcos
 
         public:
             void on_future_ready(
-                std::size_t idx, hpx::execution::execution_context ctx)
+                std::size_t idx, hpx::execution::agent ctx)
             {
                 std::size_t const new_count = count_.fetch_add(1) + 1;
                 if (new_count <= needed_count_)
@@ -424,7 +424,7 @@ namespace hpx { namespace lcos
                     }
                     if (new_count == needed_count_) {
                         if (ctx !=
-                            hpx::execution::this_thread::execution_context())
+                            hpx::execution::this_thread::agent())
                         {
                             ctx.resume();
                         }

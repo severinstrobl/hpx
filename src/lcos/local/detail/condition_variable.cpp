@@ -69,10 +69,10 @@ namespace hpx { namespace lcos { namespace local { namespace detail
 
         if (!queue_.empty())
         {
-            hpx::execution::execution_context ctx = queue_.front().ctx_;
+            hpx::execution::agent ctx = queue_.front().ctx_;
 
             // remove item from queue before error handling
-            queue_.front().ctx_ = hpx::execution::execution_context();
+            queue_.front().ctx_ = hpx::execution::agent();
             queue_.pop_front();
 
             if (HPX_UNLIKELY(!ctx))
@@ -116,10 +116,10 @@ namespace hpx { namespace lcos { namespace local { namespace detail
                 qe.q_ = &queue;
 
             do {
-                hpx::execution::execution_context ctx = queue.front().ctx_;
+                hpx::execution::agent ctx = queue.front().ctx_;
 
                 // remove item from queue before error handling
-                queue.front().ctx_ = hpx::execution::execution_context();
+                queue.front().ctx_ = hpx::execution::agent();
                 queue.pop_front();
 
                 if (HPX_UNLIKELY(!ctx))
@@ -177,7 +177,7 @@ namespace hpx { namespace lcos { namespace local { namespace detail
         HPX_ASSERT(lock.owns_lock());
 
         // enqueue the request and block this thread
-        auto this_ctx = hpx::execution::this_thread::execution_context();
+        auto this_ctx = hpx::execution::this_thread::agent();
         queue_entry f(this_ctx, &queue_);
         queue_.push_back(f);
 
@@ -199,7 +199,7 @@ namespace hpx { namespace lcos { namespace local { namespace detail
         HPX_ASSERT(lock.owns_lock());
 
         // enqueue the request and block this thread
-        auto this_ctx = hpx::execution::this_thread::execution_context();
+        auto this_ctx = hpx::execution::this_thread::agent();
         queue_entry f(this_ctx, &queue_);
         queue_.push_back(f);
 
@@ -229,10 +229,10 @@ namespace hpx { namespace lcos { namespace local { namespace detail
 
             while (!queue.empty())
             {
-                hpx::execution::execution_context ctx = queue.front().ctx_;
+                hpx::execution::agent ctx = queue.front().ctx_;
 
                 // remove item from queue before error handling
-                queue.front().ctx_ = hpx::execution::execution_context();
+                queue.front().ctx_ = hpx::execution::agent();
                 queue.pop_front();
 
                 if (HPX_UNLIKELY(!ctx))

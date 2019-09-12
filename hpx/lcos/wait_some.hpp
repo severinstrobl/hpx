@@ -236,7 +236,7 @@ namespace hpx { namespace lcos
                         shared_state->set_on_completed(util::deferred_call(
                             &wait_some<Sequence>::on_future_ready,
                             wait_.shared_from_this(),
-                            hpx::execution::this_thread::execution_context()));
+                            hpx::execution::this_thread::agent()));
                         return;
                     }
                 }
@@ -295,12 +295,12 @@ namespace hpx { namespace lcos
         struct wait_some : std::enable_shared_from_this<wait_some<Sequence> > //-V690
         {
         public:
-            void on_future_ready(hpx::execution::execution_context ctx)
+            void on_future_ready(hpx::execution::agent ctx)
             {
                 if (count_.fetch_add(1) + 1 == needed_count_)
                 {
                     // reactivate waiting thread only if it's not us
-                    if (ctx != hpx::execution::this_thread::execution_context())
+                    if (ctx != hpx::execution::this_thread::agent())
                         ctx.resume();
                     else
                         goal_reached_on_calling_thread_ = true;

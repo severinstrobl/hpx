@@ -4,7 +4,7 @@
 //  file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 
 #include <hpx/assertion.hpp>
-#include <hpx/execution/execution_context.hpp>
+#include <hpx/execution/agent.hpp>
 #ifdef HPX_HAVE_VERIFY_LOCKS
 #include <hpx/execution/register_locks.hpp>
 #endif
@@ -14,9 +14,9 @@
 #include <iostream>
 
 namespace hpx { namespace execution {
-    void execution_context::yield(const char* desc)
+    void agent::yield(const char* desc)
     {
-        HPX_ASSERT(*this == hpx::execution::this_thread::execution_context());
+        HPX_ASSERT(*this == hpx::execution::this_thread::agent());
         // verify that there are no more registered locks for this OS-thread
 #ifdef HPX_HAVE_VERIFY_LOCKS
         util::verify_no_locks();
@@ -24,9 +24,9 @@ namespace hpx { namespace execution {
         impl_->yield(desc);
     }
 
-    void execution_context::yield_k(std::size_t k, const char* desc)
+    void agent::yield_k(std::size_t k, const char* desc)
     {
-        HPX_ASSERT(*this == hpx::execution::this_thread::execution_context());
+        HPX_ASSERT(*this == hpx::execution::this_thread::agent());
         // verify that there are no more registered locks for this OS-thread
 #ifdef HPX_HAVE_VERIFY_LOCKS
         util::verify_no_locks();
@@ -34,9 +34,9 @@ namespace hpx { namespace execution {
         impl_->yield(desc);
     }
 
-    void execution_context::suspend(const char* desc)
+    void agent::suspend(const char* desc)
     {
-        HPX_ASSERT(*this == hpx::execution::this_thread::execution_context());
+        HPX_ASSERT(*this == hpx::execution::this_thread::agent());
         // verify that there are no more registered locks for this OS-thread
 #ifdef HPX_HAVE_VERIFY_LOCKS
         util::verify_no_locks();
@@ -44,21 +44,21 @@ namespace hpx { namespace execution {
         impl_->suspend(desc);
     }
 
-    void execution_context::resume(const char* desc)
+    void agent::resume(const char* desc)
     {
-        HPX_ASSERT(*this != hpx::execution::this_thread::execution_context());
+        HPX_ASSERT(*this != hpx::execution::this_thread::agent());
         impl_->resume(desc);
     }
 
-    void execution_context::abort(const char* desc)
+    void agent::abort(const char* desc)
     {
-        HPX_ASSERT(*this != hpx::execution::this_thread::execution_context());
+        HPX_ASSERT(*this != hpx::execution::this_thread::agent());
         impl_->abort(desc);
     }
 
-    std::ostream& operator<<(std::ostream& os, execution_context const& ctx)
+    std::ostream& operator<<(std::ostream& os, agent const& a)
     {
-        hpx::util::format_to(os, "execution_context{{{}}}", ctx.impl_);
+        hpx::util::format_to(os, "agent{{{}}}", a.impl_->description());
         return os;
     }
 }}    // namespace hpx::execution

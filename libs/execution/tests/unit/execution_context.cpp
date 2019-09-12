@@ -13,8 +13,24 @@
 
 std::size_t dummy_called = 0;
 
-struct dummy_context : hpx::execution::execution_context_base
+struct dummy_context : hpx::execution::context_base
 {
+    hpx::execution::resource_base const& resource() const
+    {
+        return resource_;
+    }
+
+    hpx::execution::resource_base resource_;
+};
+
+struct dummy_agent : hpx::execution::agent_base
+{
+    std::string description() const { return ""; }
+    dummy_context const& context() const
+    {
+        return context_;
+    }
+
     void yield(const char* desc)
     {
         ++dummy_called;
@@ -31,6 +47,8 @@ struct dummy_context : hpx::execution::execution_context_base
         hpx::util::steady_time_point const& sleep_time, const char* desc)
     {
     }
+
+    dummy_context context_;
 };
 
 void test_basic_functionality()
@@ -39,8 +57,8 @@ void test_basic_functionality()
     {
         HPX_TEST_EQ(dummy_called, 0u);
         {
-            dummy_context dummy;
-            hpx::execution::this_thread::reset_execution_context ctx(dummy);
+            dummy_agent dummy;
+            hpx::execution::this_thread::reset_agent ctx(dummy);
             hpx::execution::this_thread::yield();
         }
 
@@ -53,10 +71,10 @@ void test_basic_functionality()
 
     // Test that we get different contexts in different threads...
     {
-        auto context = hpx::execution::this_thread::execution_context();
+        auto context = hpx::execution::this_thread::agent();
         std::thread t([&context]() {
             HPX_TEST_NEQ(
-                context, hpx::execution::this_thread::execution_context());
+                context, hpx::execution::this_thread::agent());
         });
         t.join();
     }
@@ -112,12 +130,12 @@ void test_yield()
 void test_suspend_resume()
 {
     std::mutex mtx;
-    hpx::execution::execution_context suspended;
+    hpx::execution::agent suspended;
 
     bool resumed = false;
 
     std::thread t1([&mtx, &suspended, &resumed]() {
-        auto context = hpx::execution::this_thread::execution_context();
+        auto context = hpx::execution::this_thread::agent();
         {
             std::unique_lock<std::mutex> l(mtx);
             suspended = context;

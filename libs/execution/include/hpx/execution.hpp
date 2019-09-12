@@ -6,9 +6,11 @@
 #ifndef HPX_EXECUTION_HPP
 #define HPX_EXECUTION_HPP
 
-#include <hpx/execution/execution_context.hpp>
-#include <hpx/execution/execution_context_base.hpp>
+#include <hpx/execution/agent_base.hpp>
+#include <hpx/execution/agent.hpp>
+#include <hpx/execution/context_base.hpp>
 #include <hpx/execution/register_locks.hpp>
+#include <hpx/execution/resource_base.hpp>
 #include <hpx/execution/this_thread.hpp>
 
 #endif

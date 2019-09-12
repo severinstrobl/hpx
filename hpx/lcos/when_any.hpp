@@ -249,7 +249,7 @@ namespace hpx { namespace lcos
                                     &when_any<Sequence>::on_future_ready,
                                     when_.shared_from_this(),
                                     idx_,
-                                    hpx::execution::this_thread::execution_context()));
+                                    hpx::execution::this_thread::agent()));
                             ++idx_;
                             return;
                         }
@@ -316,14 +316,14 @@ namespace hpx { namespace lcos
         {
         public:
             void on_future_ready(
-                std::size_t idx, hpx::execution::execution_context ctx)
+                std::size_t idx, hpx::execution::agent ctx)
             {
                 std::size_t index_not_initialized =
                     when_any_result<Sequence>::index_error();
                 if (index_.compare_exchange_strong(index_not_initialized, idx))
                 {
                     // reactivate waiting thread only if it's not us
-                    if (ctx != hpx::execution::this_thread::execution_context())
+                    if (ctx != hpx::execution::this_thread::agent())
                         ctx.resume();
                     else
                         goal_reached_on_calling_thread_ = true;

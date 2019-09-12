@@ -8,7 +8,9 @@
 
 #include <hpx/config.hpp>
 
-#include <hpx/execution/execution_context_base.hpp>
+#include <hpx/execution/agent_base.hpp>
+#include <hpx/execution/context_base.hpp>
+#include <hpx/execution/resource_base.hpp>
 #include <hpx/runtime/threads/coroutines/detail/coroutine_impl.hpp>
 #include <hpx/runtime/threads/coroutines/detail/coroutine_self.hpp>
 #include <hpx/runtime/threads/thread_enums.hpp>
@@ -19,10 +21,25 @@
 
 namespace hpx { namespace threads {
 
-    struct HPX_EXPORT execution_context : hpx::execution::execution_context_base
+    struct HPX_EXPORT execution_context : hpx::execution::context_base
     {
-        explicit execution_context(
+        hpx::execution::resource_base const& resource() const
+        {
+            return resource_;
+        }
+        hpx::execution::resource_base resource_;
+    };
+    
+    struct HPX_EXPORT execution_agent : hpx::execution::agent_base
+    {
+        explicit execution_agent(
             coroutines::detail::coroutine_impl* coroutine) noexcept;
+
+        std::string description() const;
+        execution_context const& context() const
+        {
+            return context_;
+        }
 
         void yield(const char* desc);
         void yield_k(std::size_t k, const char* desc);
@@ -42,6 +59,7 @@ namespace hpx { namespace threads {
 
         void do_resume(const char* desc, hpx::threads::thread_state_ex_enum statex);
 
+        execution_context context_;
     };
 }}    // namespace hpx::threads
 

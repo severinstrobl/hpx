@@ -14,13 +14,12 @@
 #include <hpx/runtime/naming_fwd.hpp>
 #include <hpx/runtime/threads/coroutines/coroutine.hpp>
 #include <hpx/runtime/threads/detail/combined_tagged_state.hpp>
-#include <hpx/runtime/threads/execution_context.hpp>
+#include <hpx/runtime/threads/execution_agent.hpp>
 #include <hpx/runtime/threads/thread_data_fwd.hpp>
 #include <hpx/runtime/threads/thread_init_data.hpp>
 
 #include <hpx/assertion.hpp>
 #include <hpx/concurrency/spinlock_pool.hpp>
-#include <hpx/execution/execution_context.hpp>
 #include <hpx/execution/this_thread.hpp>
 #include <hpx/functional/function.hpp>
 #include <hpx/logging.hpp>
@@ -508,8 +507,8 @@ namespace hpx { namespace threads
         ///                 manager will use the returned value to set the
         ///                 thread's scheduling status.
         coroutine_type::result_type operator()(
-            hpx::execution::this_thread::detail::execution_context_storage*
-                context_storage);
+            hpx::execution::this_thread::detail::agent_storage*
+                agent_storage);
 
         thread_id_type get_thread_id() const
         {
@@ -598,7 +597,7 @@ namespace hpx { namespace threads
           , coroutine_(std::move(init_data.func), thread_id_type(this_()),
                 init_data.stacksize)
           , queue_(queue)
-          , context_(coroutine_.impl())
+          , agent_(coroutine_.impl())
         {
             LTM_(debug) << "thread::thread(" << this << "), description("
                         << get_description() << ")";
@@ -723,7 +722,7 @@ namespace hpx { namespace threads
         void* queue_;
 
     public:
-        execution_context context_;
+        execution_agent agent_;
     };
 }}
 

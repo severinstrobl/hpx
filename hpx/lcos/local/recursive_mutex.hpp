@@ -12,7 +12,8 @@
 
 #include <hpx/config.hpp>
 #include <hpx/assertion.hpp>
-#include <hpx/execution/execution_context.hpp>
+#include <hpx/execution/agent.hpp>
+#include <hpx/execution/this_thread.hpp>
 #include <hpx/lcos/local/spinlock.hpp>
 
 #include <atomic>
@@ -34,7 +35,7 @@ namespace hpx { namespace lcos { namespace local
 
         private:
             std::atomic<std::uint64_t> recursion_count;
-            std::atomic<hpx::execution::execution_context> locking_context;
+            std::atomic<hpx::execution::agent> locking_context;
             Mutex mtx;
 
         public:
@@ -51,7 +52,7 @@ namespace hpx { namespace lcos { namespace local
             /// \throws Never throws.
             bool try_lock()
             {
-                auto ctx = hpx::execution::this_thread::execution_context();
+                auto ctx = hpx::execution::this_thread::agent();
                 HPX_ASSERT(ctx);
 
                 return try_recursive_lock(ctx) || try_basic_lock(ctx);
@@ -66,7 +67,7 @@ namespace hpx { namespace lcos { namespace local
             ///         called outside of a HPX-thread.
             void lock()
             {
-                auto ctx = hpx::execution::this_thread::execution_context();
+                auto ctx = hpx::execution::this_thread::agent();
                 HPX_ASSERT(ctx);
 
                 if (!try_recursive_lock(ctx))
@@ -128,7 +129,7 @@ namespace hpx { namespace lcos { namespace local
             {
                 if (0 == --recursion_count)
                 {
-                    locking_context.exchange(hpx::execution::execution_context());
+                    locking_context.exchange(hpx::execution::agent());
                     util::unregister_lock(this);
                     util::reset_ignored(&mtx);
                     mtx.unlock();
@@ -137,7 +138,7 @@ namespace hpx { namespace lcos { namespace local
 
         private:
             bool try_recursive_lock(
-                hpx::execution::execution_context current_context)
+                hpx::execution::agent current_context)
             {
                 if (locking_context.load(std::memory_order_acquire) ==
                     current_context)
@@ -150,7 +151,7 @@ namespace hpx { namespace lcos { namespace local
             }
 
             bool try_basic_lock(
-                hpx::execution::execution_context current_context)
+                hpx::execution::agent current_context)
             {
                 if (mtx.try_lock())
                 {

@@ -54,7 +54,7 @@ namespace hpx { namespace lcos
         struct wait_each
         {
         protected:
-            void on_future_ready_(hpx::execution::execution_context ctx)
+            void on_future_ready_(hpx::execution::agent ctx)
             {
                 std::size_t oldcount = ready_count_.fetch_add(1);
                 HPX_ASSERT(oldcount < lazy_values_.size());
@@ -62,7 +62,7 @@ namespace hpx { namespace lcos
                 if (oldcount + 1 == lazy_values_.size())
                 {
                     // reactivate waiting thread only if it's not us
-                    if (ctx != hpx::execution::this_thread::execution_context())
+                    if (ctx != hpx::execution::this_thread::agent())
                         ctx.resume();
                     else
                         goal_reached_on_calling_thread_ = true;
@@ -71,7 +71,7 @@ namespace hpx { namespace lcos
 
             template <typename Index>
             void on_future_ready(
-                std::false_type, Index i, hpx::execution::execution_context ctx)
+                std::false_type, Index i, hpx::execution::agent ctx)
             {
                 if (lazy_values_[i].has_value()) {
                     if (success_counter_)
@@ -86,7 +86,7 @@ namespace hpx { namespace lcos
 
             template <typename Index>
             void on_future_ready(
-                std::true_type, Index i, hpx::execution::execution_context ctx)
+                std::true_type, Index i, hpx::execution::agent ctx)
             {
                 if (lazy_values_[i].has_value()) {
                     if (success_counter_)
@@ -157,7 +157,7 @@ namespace hpx { namespace lcos
 
                 // set callback functions to executed when future is ready
                 std::size_t size = lazy_values_.size();
-                auto ctx = hpx::execution::this_thread::execution_context();
+                auto ctx = hpx::execution::this_thread::agent();
                 for (std::size_t i = 0; i != size; ++i)
                 {
                     typedef
