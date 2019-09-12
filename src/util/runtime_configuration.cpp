@@ -176,7 +176,8 @@ namespace hpx { namespace util
             "${HPX_SPINLOCK_DEADLOCK_DETECTION:0}",
 #endif
             "spinlock_deadlock_detection_limit = "
-            "${HPX_SPINLOCK_DEADLOCK_DETECTION_LIMIT:1000000}",
+            "${HPX_SPINLOCK_DEADLOCK_DETECTION_LIMIT:" HPX_PP_STRINGIZE(
+                HPX_PP_EXPAND(HPX_SPINLOCK_DEADLOCK_DETECTION_LIMIT)) "}",
 #endif
             "expect_connecting_localities = "
             "${HPX_EXPECT_CONNECTING_LOCALITIES:0}",
@@ -978,7 +979,9 @@ namespace hpx { namespace util
             util::section const* sec = get_section("hpx");
             if (nullptr != sec) {
                 return hpx::util::get_entry_as<std::size_t>(
-                    *sec, "spinlock_deadlock_detection_limit", "1000000");
+                    *sec, "spinlock_deadlock_detection_limit", HPX_PP_STRINGIZE(
+                    HPX_PP_EXPAND(HPX_SPINLOCK_DEADLOCK_DETECTION_LIMIT))
+                );
             }
         }
         return HPX_SPINLOCK_DEADLOCK_DETECTION_LIMIT;
