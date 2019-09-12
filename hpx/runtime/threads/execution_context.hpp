@@ -21,7 +21,7 @@ namespace hpx { namespace threads {
 
     struct HPX_EXPORT execution_context : hpx::execution::execution_context_base
     {
-        execution_context(
+        explicit execution_context(
             coroutines::detail::coroutine_impl* coroutine) noexcept;
 
         void yield(const char* desc);

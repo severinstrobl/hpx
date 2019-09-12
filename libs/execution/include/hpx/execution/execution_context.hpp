@@ -6,12 +6,13 @@
 #ifndef HPX_EXECUTION_EXECUTION_CONTEXT_HPP
 #define HPX_EXECUTION_EXECUTION_CONTEXT_HPP
 
+#include <hpx/config.hpp>
 #include <hpx/execution/execution_context_base.hpp>
 
 #include <iosfwd>
 
 namespace hpx { namespace execution {
-    class execution_context
+    class HPX_EXPORT execution_context
     {
     public:
         constexpr execution_context() noexcept

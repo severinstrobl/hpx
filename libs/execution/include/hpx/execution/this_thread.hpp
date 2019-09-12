@@ -6,6 +6,7 @@
 #ifndef HPX_EXECUTION_THIS_THREAD_HPP
 #define HPX_EXECUTION_THIS_THREAD_HPP
 
+#include <hpx/config.hpp>
 #include <hpx/execution/execution_context.hpp>
 #include <hpx/timing/steady_clock.hpp>
 
@@ -14,10 +15,10 @@
 namespace hpx { namespace execution { namespace this_thread {
     namespace detail {
         struct execution_context_storage;
-        execution_context_storage* get_execution_context_storage();
+        HPX_EXPORT execution_context_storage* get_execution_context_storage();
     }    // namespace detail
 
-    struct reset_execution_context
+    struct HPX_EXPORT reset_execution_context
     {
         reset_execution_context(
             detail::execution_context_storage*, execution_context_base& impl);
@@ -28,12 +29,12 @@ namespace hpx { namespace execution { namespace this_thread {
         execution_context_base* old_;
     };
 
-    hpx::execution::execution_context execution_context();
+    HPX_EXPORT hpx::execution::execution_context execution_context();
 
-    void yield(const char* desc = "hpx::execution::this_thread::yield");
-    void yield_k(std::size_t k,
+    HPX_EXPORT void yield(const char* desc = "hpx::execution::this_thread::yield");
+    HPX_EXPORT void yield_k(std::size_t k,
         const char* desc = "hpx::execution::this_thread::yield_k");
-    void suspend(const char* desc = "hpx::execution::this_thread::suspend");
+    HPX_EXPORT void suspend(const char* desc = "hpx::execution::this_thread::suspend");
 
     template <typename Rep, typename Period>
     void sleep_for(std::chrono::duration<Rep, Period> const& sleep_duration,
