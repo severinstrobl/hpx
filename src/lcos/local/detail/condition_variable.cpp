@@ -243,13 +243,10 @@ namespace hpx { namespace lcos { namespace local { namespace detail
                     continue;
                 }
 
-                //                 LERR_(fatal)
-                //                         << "condition_variable::abort_all:"
-                //                         << " pending thread: "
-                //                         << get_thread_state_name(
-                //                                 threads::get_thread_state(id))
-                //                         << "(" << id << "): "
-                //                         << threads::get_thread_description(id);
+                LERR_(fatal)
+                        << "condition_variable::abort_all:"
+                        << " pending thread: "
+                        << ctx;
 
                 // unlock while notifying thread as this can suspend
                 util::unlock_guard<std::unique_lock<Mutex> > unlock(lock);
