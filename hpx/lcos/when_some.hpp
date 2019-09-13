@@ -413,7 +413,7 @@ namespace hpx { namespace lcos
 
         public:
             void on_future_ready(
-                std::size_t idx, hpx::execution::agent ctx)
+                std::size_t idx, hpx::execution::agent_ref ctx)
             {
                 std::size_t const new_count = count_.fetch_add(1) + 1;
                 if (new_count <= needed_count_)

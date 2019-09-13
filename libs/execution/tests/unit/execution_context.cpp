@@ -130,7 +130,7 @@ void test_yield()
 void test_suspend_resume()
 {
     std::mutex mtx;
-    hpx::execution::agent suspended;
+    hpx::execution::agent_ref suspended;
 
     bool resumed = false;
 

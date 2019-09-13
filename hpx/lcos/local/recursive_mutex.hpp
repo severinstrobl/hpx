@@ -12,7 +12,7 @@
 
 #include <hpx/config.hpp>
 #include <hpx/assertion.hpp>
-#include <hpx/execution/agent.hpp>
+#include <hpx/execution/agent_ref.hpp>
 #include <hpx/execution/this_thread.hpp>
 #include <hpx/lcos/local/spinlock.hpp>
 
@@ -35,7 +35,7 @@ namespace hpx { namespace lcos { namespace local
 
         private:
             std::atomic<std::uint64_t> recursion_count;
-            std::atomic<hpx::execution::agent> locking_context;
+            std::atomic<hpx::execution::agent_ref> locking_context;
             Mutex mtx;
 
         public:
@@ -129,7 +129,7 @@ namespace hpx { namespace lcos { namespace local
             {
                 if (0 == --recursion_count)
                 {
-                    locking_context.exchange(hpx::execution::agent());
+                    locking_context.exchange(hpx::execution::agent_ref());
                     util::unregister_lock(this);
                     util::reset_ignored(&mtx);
                     mtx.unlock();
@@ -138,7 +138,7 @@ namespace hpx { namespace lcos { namespace local
 
         private:
             bool try_recursive_lock(
-                hpx::execution::agent current_context)
+                hpx::execution::agent_ref current_context)
             {
                 if (locking_context.load(std::memory_order_acquire) ==
                     current_context)
@@ -151,7 +151,7 @@ namespace hpx { namespace lcos { namespace local
             }
 
             bool try_basic_lock(
-                hpx::execution::agent current_context)
+                hpx::execution::agent_ref current_context)
             {
                 if (mtx.try_lock())
                 {

@@ -80,6 +80,7 @@ namespace hpx { namespace threads
         hpx::execution::this_thread::detail::agent_storage*
             agent_storage)
     {
+        HPX_ASSERT(get_state().state() == pending);
         HPX_ASSERT(this == coroutine_.get_thread_id().get());
         hpx::execution::this_thread::reset_agent ctx(
             agent_storage, agent_);

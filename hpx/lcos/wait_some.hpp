@@ -295,7 +295,7 @@ namespace hpx { namespace lcos
         struct wait_some : std::enable_shared_from_this<wait_some<Sequence> > //-V690
         {
         public:
-            void on_future_ready(hpx::execution::agent ctx)
+            void on_future_ready(hpx::execution::agent_ref ctx)
             {
                 if (count_.fetch_add(1) + 1 == needed_count_)
                 {

@@ -7,7 +7,7 @@
 #define HPX_EXECUTION_THIS_THREAD_HPP
 
 #include <hpx/config.hpp>
-#include <hpx/execution/agent.hpp>
+#include <hpx/execution/agent_ref.hpp>
 #include <hpx/execution/agent_base.hpp>
 #include <hpx/timing/steady_clock.hpp>
 
@@ -31,7 +31,7 @@ namespace hpx { namespace execution { namespace this_thread {
         agent_base* old_;
     };
 
-    HPX_EXPORT hpx::execution::agent agent();
+    HPX_EXPORT hpx::execution::agent_ref agent();
 
     HPX_EXPORT void yield(const char* desc = "hpx::execution::this_thread::yield");
     HPX_EXPORT void yield_k(std::size_t k,

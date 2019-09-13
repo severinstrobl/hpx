@@ -4,7 +4,7 @@
 //  file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 
 #include <hpx/assertion.hpp>
-#include <hpx/execution/agent.hpp>
+#include <hpx/execution/agent_ref.hpp>
 #ifdef HPX_HAVE_VERIFY_LOCKS
 #include <hpx/execution/register_locks.hpp>
 #endif
@@ -14,7 +14,7 @@
 #include <iostream>
 
 namespace hpx { namespace execution {
-    void agent::yield(const char* desc)
+    void agent_ref::yield(const char* desc)
     {
         HPX_ASSERT(*this == hpx::execution::this_thread::agent());
         // verify that there are no more registered locks for this OS-thread
@@ -24,7 +24,7 @@ namespace hpx { namespace execution {
         impl_->yield(desc);
     }
 
-    void agent::yield_k(std::size_t k, const char* desc)
+    void agent_ref::yield_k(std::size_t k, const char* desc)
     {
         HPX_ASSERT(*this == hpx::execution::this_thread::agent());
         // verify that there are no more registered locks for this OS-thread
@@ -34,7 +34,7 @@ namespace hpx { namespace execution {
         impl_->yield(desc);
     }
 
-    void agent::suspend(const char* desc)
+    void agent_ref::suspend(const char* desc)
     {
         HPX_ASSERT(*this == hpx::execution::this_thread::agent());
         // verify that there are no more registered locks for this OS-thread
@@ -44,21 +44,33 @@ namespace hpx { namespace execution {
         impl_->suspend(desc);
     }
 
-    void agent::resume(const char* desc)
+    void agent_ref::resume(const char* desc)
     {
         HPX_ASSERT(*this != hpx::execution::this_thread::agent());
         impl_->resume(desc);
     }
 
-    void agent::abort(const char* desc)
+    void agent_ref::abort(const char* desc)
     {
         HPX_ASSERT(*this != hpx::execution::this_thread::agent());
         impl_->abort(desc);
     }
-
-    std::ostream& operator<<(std::ostream& os, agent const& a)
+        
+    void agent_ref::sleep_for(hpx::util::steady_duration const& sleep_duration, const char* desc)
     {
-        hpx::util::format_to(os, "agent{{{}}}", a.impl_->description());
+        HPX_ASSERT(*this == hpx::execution::this_thread::agent());
+        impl_->sleep_for(sleep_duration, desc);
+    }
+
+    void agent_ref::sleep_until(hpx::util::steady_time_point const& sleep_time, const char* desc)
+    {
+        HPX_ASSERT(*this == hpx::execution::this_thread::agent());
+        impl_->sleep_until(sleep_time, desc);
+    }
+
+    std::ostream& operator<<(std::ostream& os, agent_ref const& a)
+    {
+        hpx::util::format_to(os, "agent_ref{{{}}}", a.impl_->description());
         return os;
     }
 }}    // namespace hpx::execution

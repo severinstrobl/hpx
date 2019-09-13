@@ -137,7 +137,9 @@ namespace hpx { namespace threads {
             detail::reset_backtrace bt(id, ec);
 #endif
             HPX_ASSERT(id->get_state().state() == active);
+            HPX_ASSERT(state != active);
             statex = self_.yield(threads::thread_result_type(state, nullptr));
+            HPX_ASSERT(id->get_state().state() == active);
         }
 
         // handle interruption, if needed

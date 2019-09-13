@@ -316,7 +316,7 @@ namespace hpx { namespace lcos
         {
         public:
             void on_future_ready(
-                std::size_t idx, hpx::execution::agent ctx)
+                std::size_t idx, hpx::execution::agent_ref ctx)
             {
                 std::size_t index_not_initialized =
                     when_any_result<Sequence>::index_error();

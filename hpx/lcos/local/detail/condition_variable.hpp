@@ -9,7 +9,7 @@
 
 #include <hpx/config.hpp>
 #include <hpx/errors.hpp>
-#include <hpx/execution/agent.hpp>
+#include <hpx/execution/agent_ref.hpp>
 #include <hpx/lcos/local/spinlock.hpp>
 #include <hpx/runtime/threads/thread_data_fwd.hpp>
 #include <hpx/runtime/threads/thread_enums.hpp>
@@ -41,12 +41,12 @@ namespace hpx { namespace lcos { namespace local { namespace detail
                 boost::intrusive::link_mode<boost::intrusive::normal_link>
             > hook_type;
 
-            queue_entry(hpx::execution::agent ctx, void* q)
+            queue_entry(hpx::execution::agent_ref ctx, void* q)
               : ctx_(ctx)
               , q_(q)
             {}
 
-            hpx::execution::agent ctx_;
+            hpx::execution::agent_ref ctx_;
             void* q_;
             hook_type slist_hook_;
         };

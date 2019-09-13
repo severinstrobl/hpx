@@ -8,6 +8,7 @@
 
 #include <hpx/assertion.hpp>
 #include <hpx/errors.hpp>
+#include <hpx/execution/this_thread.hpp>
 #include <hpx/lcos/local/no_mutex.hpp>
 #include <hpx/lcos/local/spinlock.hpp>
 #include <hpx/logging.hpp>
@@ -69,10 +70,10 @@ namespace hpx { namespace lcos { namespace local { namespace detail
 
         if (!queue_.empty())
         {
-            hpx::execution::agent ctx = queue_.front().ctx_;
+            auto ctx = queue_.front().ctx_;
 
             // remove item from queue before error handling
-            queue_.front().ctx_ = hpx::execution::agent();
+            queue_.front().ctx_.reset();
             queue_.pop_front();
 
             if (HPX_UNLIKELY(!ctx))
@@ -116,10 +117,10 @@ namespace hpx { namespace lcos { namespace local { namespace detail
                 qe.q_ = &queue;
 
             do {
-                hpx::execution::agent ctx = queue.front().ctx_;
+                auto ctx = queue.front().ctx_;
 
                 // remove item from queue before error handling
-                queue.front().ctx_ = hpx::execution::agent();
+                queue.front().ctx_.reset();
                 queue.pop_front();
 
                 if (HPX_UNLIKELY(!ctx))
@@ -229,10 +230,10 @@ namespace hpx { namespace lcos { namespace local { namespace detail
 
             while (!queue.empty())
             {
-                hpx::execution::agent ctx = queue.front().ctx_;
+                auto ctx = queue.front().ctx_;
 
                 // remove item from queue before error handling
-                queue.front().ctx_ = hpx::execution::agent();
+                queue.front().ctx_.reset();
                 queue.pop_front();
 
                 if (HPX_UNLIKELY(!ctx))

@@ -7,7 +7,7 @@
 #define HPX_EXECUTION_HPP
 
 #include <hpx/execution/agent_base.hpp>
-#include <hpx/execution/agent.hpp>
+#include <hpx/execution/agent_ref.hpp>
 #include <hpx/execution/context_base.hpp>
 #include <hpx/execution/register_locks.hpp>
 #include <hpx/execution/resource_base.hpp>

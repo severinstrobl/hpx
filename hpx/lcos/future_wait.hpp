@@ -54,7 +54,7 @@ namespace hpx { namespace lcos
         struct wait_each
         {
         protected:
-            void on_future_ready_(hpx::execution::agent ctx)
+            void on_future_ready_(hpx::execution::agent_ref ctx)
             {
                 std::size_t oldcount = ready_count_.fetch_add(1);
                 HPX_ASSERT(oldcount < lazy_values_.size());
@@ -71,7 +71,7 @@ namespace hpx { namespace lcos
 
             template <typename Index>
             void on_future_ready(
-                std::false_type, Index i, hpx::execution::agent ctx)
+                std::false_type, Index i, hpx::execution::agent_ref ctx)
             {
                 if (lazy_values_[i].has_value()) {
                     if (success_counter_)
@@ -86,7 +86,7 @@ namespace hpx { namespace lcos
 
             template <typename Index>
             void on_future_ready(
-                std::true_type, Index i, hpx::execution::agent ctx)
+                std::true_type, Index i, hpx::execution::agent_ref ctx)
             {
                 if (lazy_values_[i].has_value()) {
                     if (success_counter_)

@@ -8,7 +8,7 @@ cmake_minimum_required(VERSION 3.3.2 FATAL_ERROR)
 set(execution_headers
   hpx/execution.hpp
   hpx/execution/agent_base.hpp
-  hpx/execution/agent.hpp
+  hpx/execution/agent_ref.hpp
   hpx/execution/context_base.hpp
   hpx/execution/register_locks.hpp
   hpx/execution/resource_base.hpp
@@ -20,7 +20,7 @@ set(concurrency_compat_headers
 )
 
 set(execution_sources
-  agent.cpp
+  agent_ref.cpp
   register_locks.cpp
   this_thread.cpp
 )

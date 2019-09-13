@@ -6,6 +6,7 @@
 //  file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 
 #include <hpx/assertion.hpp>
+#include <hpx/config.hpp>
 #include <hpx/errors/throw_exception.hpp>
 #include <hpx/execution/agent_base.hpp>
 #include <hpx/execution/this_thread.hpp>
@@ -246,9 +247,9 @@ namespace hpx { namespace execution {
             storage_->set(old_);
         }
 
-        hpx::execution::agent agent()
+        hpx::execution::agent_ref agent()
         {
-            return hpx::execution::agent(detail::get_agent_storage()->impl_);
+            return hpx::execution::agent_ref(detail::get_agent_storage()->impl_);
         }
 
         void yield(const char* desc)
