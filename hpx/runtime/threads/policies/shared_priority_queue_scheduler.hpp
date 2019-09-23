@@ -122,12 +122,6 @@ namespace hpx { namespace threads { namespace policies {
 
         virtual ~shared_priority_queue_scheduler() {}
 
-        bool numa_sensitive() const override { return true; }
-        virtual bool has_thread_stealing(std::size_t num_thread) const override
-        {
-            return true;
-        }
-
         static std::string get_scheduler_name()
         {
             return "shared_priority_queue_scheduler";
